@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Employee";
+}
+
+<h2>Employee List</h2>
+<a asp-controller="Employee" asp-action="AddEmployee" class="btn btn-success">Add Employee</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>FullName</th>
+            <th>PhoneNumper</th>
+            <th>Salary</th>
+            <th>HireDate</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Employee in ViewBag.Data)
+        {
+            <tr>
+                <td>@Employee.FullName</td>
+                <td>@Employee.PhoneNumper</td>
+                <td>@Employee.Salary</td>
+                <td>@Employee.HireDate</td>
+                <td>
+                    <a href="@Url.Action("EditEmployee", "Employee", new { id = Employee.Id })" class="btn btn-warning">Edit</a>
+                    <form asp-controller="Employee" asp-action="DeleteEmployee" asp-route-id="@Employee.Id" method="get" style="display:inline-block;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+   
+</table>

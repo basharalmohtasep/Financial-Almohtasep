@@ -4,7 +4,9 @@ using System.Diagnostics;
 
 namespace Financial_Almohtasep.Controllers
 {
+    
     public class HomeController : Controller
+
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -22,6 +24,12 @@ namespace Financial_Almohtasep.Controllers
         {
             return View();
         }
+        
+        public IActionResult Employee() {
+            return View();
+        }
+        
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

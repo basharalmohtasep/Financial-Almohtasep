@@ -1,0 +1,38 @@
+﻿@model Financial_Almohtasep.Models.EmployeeViewModel;
+
+<div class="container mt-5">
+    <h2 class="mb-4"> Add Employee </h2>
+    <form asp-action="AddEmployee" method="post" class="needs-validation">
+        <div class="mb-3">
+            <label for="FName" class="form-label">First Name</label>
+            <input asp-for="FName" class="form-control" placeholder="Enter your first name" />
+            <span asp-validation-for="FName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="LName" class="form-label">Last Name</label>
+            <input asp-for="LName" class="form-control" placeholder="Enter your last name" />
+            <span asp-validation-for="LName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="PhoneNumper" class="form-label">Phone Number</label>
+            <input asp-for="PhoneNumper" class="form-control" placeholder="+9627XXXXXXXX" />
+            <span asp-validation-for="PhoneNumper" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Salary" class="form-label">Salary</label>
+            <input asp-for="Salary" class="form-control" placeholder="Enter your monthly salary" />
+            <span asp-validation-for="Salary" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="HireDate" class="form-label">Hire Date</label>
+            <input asp-for="HireDate" type="date" class="form-control" />
+            <span asp-validation-for="HireDate" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

@@ -1,5 +1,18 @@
-var builder = WebApplication.CreateBuilder(args);
+using Financial_Almohtasep.Data;
+using Microsoft.EntityFrameworkCore;
 
+var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+#if !DEBUG 
+// Configure DbContext with SQL Server
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
+#else
+// Configure DbContext with SQL Lite
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+   options.UseSqlite(connectionString));
+#endif
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
