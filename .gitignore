@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Financial Almohtasep/Financial.db-shm
+/Financial Almohtasep/Financial.db-wal
