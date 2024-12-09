@@ -1,105 +1,127 @@
 ﻿using Financial_Almohtasep.Data;
 using Financial_Almohtasep.Models;
 using Microsoft.AspNetCore.Mvc;
+using Financial_Almohtasep.Helper;
+using Financial_Almohtasep.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace Financial_Almohtasep.Controllers
 {
     [Route("[controller]/[action]")]
     public class EmployeeController : Controller
-        
     {
-        private readonly ApplicationDbContext _context;
-        public EmployeeController(ApplicationDbContext context)
+        #region Constructor
+        private readonly IEmployeeService _employeeService;
+
+        public EmployeeController(IEmployeeService employeeService)
         {
-            _context = context;
+            _employeeService = employeeService;
         }
-       
-        public IActionResult Index()
+        #endregion
+
+        #region Methods
+
+        // Index: Display all employees
+        public async Task<IActionResult> Index()
         {
-            ViewBag.Data=_context.Employees.ToList();
+            ViewBag.Data = await _employeeService.GetAllEmployeesAsync();
             return View();
         }
+
+        // Add Employee (GET)
         [HttpGet]
         public IActionResult AddEmployee()
         {
             return View();
         }
+
+        // Add Employee (POST)
         [HttpPost]
-        public IActionResult AddEmployee(EmployeeViewModel model)
+        public async Task<IActionResult> AddEmployee(EmployeeViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-
-
-                Employee employee = new()
-                {
-                    FName = model.FName,
-                    LName = model.LName,
-                    PhoneNumper = model.PhoneNumper,
-                    Salary = model.Salary,
-                    HireDate = model.HireDate,
-                };
-                _context.Employees.Add(employee);
-                _context.SaveChanges();
-
-                return RedirectToAction( "Index");
+                NotificationHelper.Alert(TempData, false, "حدث خطاء في الإدخال");
+                return View(model);
             }
-            return View(model);
+
+            if (model.HireDate > DateTime.Now)
+            {
+                NotificationHelper.Alert(TempData, false, "تاريخ التوظيف أكبر من تاريخ اليوم");
+                return View(model);
+            }
+
+            var result = await _employeeService.AddEmployeeAsync(model);
+            if (result == 0)
+            {
+                NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
+                return View(model);
+            }
+
+            NotificationHelper.Alert(TempData, true, "تم الإضافة بنجاح");
+            return RedirectToAction("Index");
         }
+
+        // Edit Employee (GET)
         [HttpGet("{id}")]
-        public IActionResult EditEmployee(Guid Id)
+        public async Task<IActionResult> EditEmployee(Guid id)
         {
-
-            Employee? Employee = _context.Employees.Find(Id);
-            if (Employee is not null)
-                return View(new EmployeeDtoModel(Employee));
-            return RedirectToAction(nameof(Index));
-        }
-        [HttpPost("{id}")]
-        public IActionResult EditEmployee(Guid Id,EmployeeDtoModel model)
-        {
-            if (ModelState.IsValid)
+            var employee = await _employeeService.GetEmployeeByIdAsync(id);
+            if (employee == null)
             {
-                if (Id != model.Id)
-                {
-                    
-                    return RedirectToAction(nameof(EditEmployee), new { Id = model.Id });
-                }
-                var Employee = _context.Employees.Find(Id);
-                if (Employee != null)
-                {
-                    Employee employees = new()
-                    {
-                        FName = model.FName,
-                        LName = model.LName,
-                        PhoneNumper = model.PhoneNumper,
-                        Salary = model.Salary,
-                        HireDate = model.HireDate,
-
-                    };
-                    _context.Employees.Update(employees);
-                    _context.SaveChanges();
-                    
-                    return RedirectToAction(nameof(Index));
-                }
+                NotificationHelper.Alert(TempData, false, "الموظف غير موجود");
+                return RedirectToAction("Index");
             }
+
+            var model = new EmployeeDtoModel
+            {
+                FName = employee.FName,
+                LName = employee.LName,
+                PhoneNumper = employee.PhoneNumper,
+                Salary = employee.Salary,
+                HireDate = employee.HireDate,
+            };
+
             return View(model);
         }
+
+        // Edit Employee (POST)
         [HttpPost("{id}")]
-        public IActionResult DeleteEmployee(Guid id)
+        public async Task<IActionResult> EditEmployee(EmployeeDtoModel model, Guid id)
         {
-
-            var Employee = _context.Employees.Find(id);
-            if (Employee != null)
+            if (!ModelState.IsValid)
             {
-                _context.Employees.Remove(Employee);
-                _context.SaveChanges();
-
-                
+                NotificationHelper.Alert(TempData, false, "حدث خطاء في الإدخال");
+                return View(model);
             }
-           
-            return RedirectToAction(nameof(Index));
+
+            var result = await _employeeService.EditEmployeeAsync(model, id);
+            if (result == 0)
+            {
+                NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
+                return View(model);
+            }
+
+            NotificationHelper.Alert(TempData, true, "تم التعديل بنجاح");
+            return RedirectToAction("Index");
         }
 
+        // Delete Employee
+        [HttpPost("{id}")]
+        public async Task<IActionResult> DeleteEmployee(Guid id)
+        {
+            var result = await _employeeService.DeleteEmployeeAsync(id);
+            if (result == 0)
+            {
+                NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
+                return RedirectToAction("Index");
+            }
+
+            NotificationHelper.Alert(TempData, true, "تم الحذف بنجاح");
+            return RedirectToAction("Index");
+        }
+
+        #endregion
     }
 }

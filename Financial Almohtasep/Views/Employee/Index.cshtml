@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Employee";
 }
 
@@ -25,7 +24,7 @@
                 <td>@Employee.HireDate</td>
                 <td>
                     <a href="@Url.Action("EditEmployee", "Employee", new { id = Employee.Id })" class="btn btn-warning">Edit</a>
-                    <form asp-controller="Employee" asp-action="DeleteEmployee" asp-route-id="@Employee.Id" method="get" style="display:inline-block;">
+                    <form asp-action="DeleteEmployee" asp-controller="Employee" asp-route-id="@Employee.Id" method="post" style="display:inline-block;">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </td>

@@ -1,0 +1,37 @@
+﻿@if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
+{
+    <script>
+        setTimeout(() => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                    Toast.fire({
+                        icon: "success",
+                        title: '@TempData["SuccessMessage"]'.replace(/'/g, "\\'")
+                    });
+            </text>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                    Toast.fire({
+                        icon: "error",
+                        title: '@TempData["ErrorMessage"]'.replace(/'/g, "\\'")
+                    });
+            </text>
+        }
+                }, 200);
+    </script>
+}

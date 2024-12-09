@@ -1,7 +1,10 @@
 using Financial_Almohtasep.Data;
+using Financial_Almohtasep.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 #if !DEBUG 
@@ -15,7 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 #endif
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
