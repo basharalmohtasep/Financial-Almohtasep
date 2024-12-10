@@ -57,7 +57,7 @@ namespace Financial_Almohtasep.Services.TransactionServices
         public async Task<int> AddEmployeeTransaction(EmployeeTransactionViewModel model)
         {
             var employeeSalary = await _context.Employees.Where(x => x.Id == model.EmployeeId).Select(e => e.Salary).SingleOrDefaultAsync();
-            if (employeeSalary == null)
+            if (employeeSalary == 0)
             {
                 return 0;
             }
@@ -83,6 +83,7 @@ namespace Financial_Almohtasep.Services.TransactionServices
                 EmployeeNetSalary employeeNetSalary = new()
                 {
                     NetSalary = NetSalary,
+                    EmployeeId = model.EmployeeId,
                 };
                 EmployeeTransaction employeeTransaction = new()
                 {
