@@ -67,7 +67,7 @@ namespace Financial_Almohtasep.Migrations
                     b.Property<float>("Transaction")
                         .HasColumnType("REAL");
 
-                    b.Property<DateTime>("TransactionData")
+                    b.Property<DateTime>("TransactionDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TransactionType")

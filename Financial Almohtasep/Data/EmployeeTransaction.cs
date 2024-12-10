@@ -11,7 +11,7 @@ namespace Financial_Almohtasep.Data
         [Required]
         public float Transaction { get; set; }//المسحوبات
         [Required]
-        public DateTime TransactionData { get; set; }//تاريخ السحب
+        public DateTime TransactionDate { get; set; }//تاريخ السحب
         public TransactionType TransactionType { get; set; }
         [Required]
         [ForeignKey(nameof(EmployeeId))]

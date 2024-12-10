@@ -1,0 +1,40 @@
+﻿@using Financial_Almohtasep.Data;
+@{
+   
+    ViewData["Title"] = "EmployeeTransaction";
+}
+
+<h2>Transaction List</h2>
+<a asp-controller="Employee" asp-action="AddTransaction" class="btn btn-success">Add Transaction</a>
+<a asp-controller="Employee" asp-action="Index" class="btn btn-secondary">Cancel</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Transaction</th>
+            <th>TransactionType</th>
+            <th>NetSalary</th>
+            <th>TransactionDate</th>
+            <th>Actions</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var Transaction in ViewBag.TransactionDate as List<EmployeeTransaction>)
+        {
+            <tr>
+                <td>@Transaction.Transaction</td>
+                <td>@Transaction.TransactionType</td>
+                @* <td>@ViewBag.Salary.NetSalary</td> *@
+                <td>@Transaction.TransactionDate</td>
+                <td>
+                    <a href="@Url.Action("EmployeeTransaction", "Employee", new { id = Transaction.EmployeeId })" class="btn btn-primary">View</a>
+                    <a href="@Url.Action("EditEmployee", "Employee", new { id = Transaction.EmployeeId })" class="btn btn-warning">Edit</a>
+                    @* <form asp-action="DeleteEmployee" asp-controller="Employee" asp-route-id="@Transaction.EmployeeId" method="post" style="display:inline-block;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form> *@
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

@@ -17,7 +17,8 @@ namespace Financial_Almohtasep.Data
             _configuration = configuration;
            
         }
-        public DbSet<EmployeeTransaction> EmployeeTransaction { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<EmployeeTransaction> EmployeeTransaction { get; set; }
+        public DbSet<EmployeeNetSalary> EmployeeNetSalaries { get; set; }
     }
 }

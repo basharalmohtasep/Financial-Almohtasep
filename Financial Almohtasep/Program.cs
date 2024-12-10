@@ -1,5 +1,6 @@
 using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Services;
+using Financial_Almohtasep.Services.EmployeeService;
+using Financial_Almohtasep.Services.TransactionServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 #if !DEBUG 
 // Configure DbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlite(connectionString));
 #else
 // Configure DbContext with SQL Lite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ITransactionServices, TransactionServices>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

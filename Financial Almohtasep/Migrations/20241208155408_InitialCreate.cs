@@ -34,7 +34,7 @@ namespace Financial_Almohtasep.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Transaction = table.Column<float>(type: "REAL", nullable: false),
-                    TransactionData = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TransactionType = table.Column<int>(type: "INTEGER", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)

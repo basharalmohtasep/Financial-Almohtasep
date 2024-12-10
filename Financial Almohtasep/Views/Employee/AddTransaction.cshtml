@@ -1,0 +1,48 @@
+﻿@model Financial_Almohtasep.Models.EmployeeTransactionViewModel;
+@using Financial_Almohtasep.Models.Enum;
+@using Financial_Almohtasep.Data;
+
+<div class="container mt-5">
+    <h2 class="mb-4"> Add Employee Transaction </h2>
+    <form asp-action="AddTransaction" method="post" class="needs-validation">
+        <div class="mb-3">
+            <label for="Transaction" class="form-label">Transaction Amount</label>
+            <input asp-for="Transaction" class="form-control" placeholder="Enter transaction amount" />
+            <span asp-validation-for="Transaction" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="TransactionDate" class="form-label">Transaction Date</label>
+            <input asp-for="TransactionDate" type="date" class="form-control" />
+            <span asp-validation-for="TransactionDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="TransactionType" class="form-label">Transaction Type</label>
+            <select asp-for="TransactionType" class="form-control">
+                <option value="">Select Type</option>
+                @foreach (var type in Enum.GetValues(typeof(TransactionType)))
+                {
+                    <option value="@((int)type)">@type</option>
+                }
+            </select>
+            <span asp-validation-for="TransactionType" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="EmployeeId" class="form-label">Employee Name</label>
+            <select asp-for="EmployeeId" class="form-control">
+                <option value="">Select Employee</option>
+                @foreach (var employee in ViewBag.EmployeeList as List<Employee>)
+                {
+                    <option value="@employee.Id">@employee.FullName</option>
+                }
+            </select>
+            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+
