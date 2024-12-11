@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financial_Almohtasep.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241208155408_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241211110855_DeleteRow")]
+    partial class DeleteRow
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,17 +31,23 @@ namespace Financial_Almohtasep.Migrations
 
                     b.Property<string>("FName")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("HireDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LName")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumper")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<float>("Salary")

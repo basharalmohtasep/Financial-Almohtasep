@@ -19,10 +19,7 @@ namespace Financial_Almohtasep.Data
         public float Salary { get; set; }//الراتب الشهري
         public DateTime HireDate { get; set; }
         public bool IsDeleted { get; set; }
-        [ForeignKey(nameof(NetSalaryId))]
-        public Guid NetSalaryId { get; set; }
-        public EmployeeNetSalary? EmployeeNetSalary { get; set; }
-        public ICollection <EmployeeTransaction> Transaction { get; set; }
+        public ICollection <EmployeeTransaction>? Transaction { get; set; }
 
     }
 

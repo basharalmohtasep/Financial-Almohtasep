@@ -72,6 +72,7 @@ namespace Financial_Almohtasep.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> EditEmployee(Guid id)
         {
+            
             var employee = await _employeeService.GetEmployeeById(id);
             if (employee == null)
             {
@@ -177,35 +178,97 @@ namespace Financial_Almohtasep.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> EmployeeTransaction(Guid id)
         {
-
-            // Fetch the employee asynchronously
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
+            if (id == Guid.Empty)
             {
-                NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
+                NotificationHelper.Alert(TempData, false, "حدث خطاء ");
                 return View();
             }
-
-            // Fetch employee transactions asynchronously
-            var employeeTransactions = await _context.EmployeeTransaction
-                                                      .Where(x => x.EmployeeId == id)
-                                                      .ToListAsync();
-
-            if (employeeTransactions == null || !employeeTransactions.Any())
+            else
             {
-                NotificationHelper.Alert(TempData, false, "هذا الموظف ليس لديه حركات سحب");
-                return RedirectToAction("Index");
+                var Employee = await _employeeService.GetEmployeeById(id);
+                if (Employee == null)
+                {
+                    NotificationHelper.Alert(TempData, false, "هذا الموظف غير موجود ");
+                    return View();
+                }
+                else
+                {
+                    var Transaction = await _transactionServices.GetTransactionByEmployeeId(id);
+                    if (Transaction == null)
+                    {
+                        NotificationHelper.Alert(TempData, false, "هذا الموظف ليس لدي حركات ");
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        //float NetSalary = await _transactionServices.GetEmployeeNetSalary(id);
+                        EmployeeTransactionDtoModel model = new()
+                        {
+                            EmployeeTransaction = Transaction,
+                        };
+                        return View(model);
+                    }
+                }
             }
 
-            // Pass the transactions to the view
-            ViewBag.TransactionDate = employeeTransactions;
-            ViewBag.Salary = await _context.EmployeeNetSalaries.FindAsync(id);
-            return View();
+
         }
+        public async Task<IActionResult> DeleteTransaction(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                NotificationHelper.Alert(TempData, false, "هذا الحركه غير موجود ");
+                return View();
+            }
+            else
+            {
+                var result = await _transactionServices.DeleteEmployeTransactione(id);
+                if (result == 0)
+                {
+                    NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
+                    return RedirectToAction("Index");
+                }
 
+                NotificationHelper.Alert(TempData, true, "تم الحذف بنجاح");
+                return RedirectToAction("Index");
+            }
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> EditTransaction(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                NotificationHelper.Alert(TempData, false, "حدث خطاء");
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                var EmployeeName = await _employeeService.GetAllEmployees();
+                if (EmployeeName == null) 
+                {
+                    
+                }
+                var Transaction = await _transactionServices.GetTransactionById(id);
+                if (Transaction == null)
+                {
+                    NotificationHelper.Alert(TempData, false, "الحركة غير موجود");
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    var model = new EmployeeTransactionViewModel
+                    {
+                        Transaction = Transaction.Transaction,
+                        TransactionType = Transaction.TransactionType,
+                        TransactionDate = Transaction.TransactionDate,
+                        EmployeeId = Transaction.EmployeeId,
+                    };
 
+                    return View(model);
+                }
+            }
+        }
+        #endregion
     }
-
-    #endregion
 }
 

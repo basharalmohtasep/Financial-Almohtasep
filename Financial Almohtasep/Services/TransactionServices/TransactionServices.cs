@@ -3,6 +3,7 @@ using Financial_Almohtasep.Helper;
 using Financial_Almohtasep.Models;
 using Financial_Almohtasep.Models.Enum;
 using Microsoft.EntityFrameworkCore;
+using System.Transactions;
 
 namespace Financial_Almohtasep.Services.TransactionServices
 {
@@ -54,50 +55,60 @@ namespace Financial_Almohtasep.Services.TransactionServices
 
             }
         }
-        public async Task<int> AddEmployeeTransaction(EmployeeTransactionViewModel model)
+        public async Task<EmployeeTransaction> GetTransactionById(Guid id)
         {
-            var employeeSalary = await _context.Employees.Where(x => x.Id == model.EmployeeId).Select(e => e.Salary).SingleOrDefaultAsync();
-            if (employeeSalary == 0)
+            return await _context.EmployeeTransaction.FindAsync(id);
+        }
+        public async Task<float> GetEmployeeNetSalary(EmployeeTransactionViewModel model)
+        {
+            if (model ==null)
             {
                 return 0;
             }
             else
             {
-                var NetSalary = await _context.EmployeeNetSalaries.Where(x => x.EmployeeId == model.EmployeeId).Select(e => e.NetSalary).SingleOrDefaultAsync();
-                if (model.TransactionType == TransactionType.Expense)
+                var salary = await _context.Employees.Where(x => x.Id == model.EmployeeId).Select(x => x.Salary).FirstOrDefaultAsync();
+                if (salary == 0)
                 {
-                    employeeSalary -= model.Transaction;
-                    NetSalary = employeeSalary;
-                }
-                else if (model.TransactionType == TransactionType.Bonus)
-                {
-                    employeeSalary += model.Transaction;
-                    NetSalary = employeeSalary;
+                    return 0;
                 }
                 else
                 {
-                    employeeSalary -= model.Transaction;
-                    NetSalary = employeeSalary;
+                    var NetSalary = await _context.EmployeeTransaction
+                        .Where(x=>x.EmployeeId== model.EmployeeId)
+                        .OrderByDescending(x=>x.CreatedAt)
+                        .Select(x=>x.NetSalary)
+                        .FirstOrDefaultAsync();
+                    if (NetSalary == 0)
+                        NetSalary = salary;
 
+                    if (model.TransactionType == TransactionType.Bonus)
+                    {
+                        return NetSalary += model.Transaction;
+                    }
+                    else
+                    {
+                        return NetSalary -= model.Transaction;
+                    }
                 }
-                EmployeeNetSalary employeeNetSalary = new()
-                {
-                    NetSalary = NetSalary,
-                    EmployeeId = model.EmployeeId,
-                };
-                EmployeeTransaction employeeTransaction = new()
-                {
-                    Transaction = model.Transaction,
-                    TransactionDate = model.TransactionDate,
-                    TransactionType = model.TransactionType,
-                    EmployeeId = model.EmployeeId,
-                };
-                await _context.EmployeeNetSalaries.AddAsync(employeeNetSalary);
-                await _context.EmployeeTransaction.AddAsync(employeeTransaction);
-                await _context.SaveChangesAsync();
-                return 1;
             }
-        
+        }
+        public async Task<int> AddEmployeeTransaction(EmployeeTransactionViewModel model)
+        {
+
+            var NetSalary=await GetEmployeeNetSalary(model);
+                    EmployeeTransaction employeeTransaction = new()
+                    {
+                        Transaction = model.Transaction,
+                        TransactionDate = model.TransactionDate,
+                        TransactionType = model.TransactionType,
+                        NetSalary= NetSalary,
+                        EmployeeId = model.EmployeeId,
+                    };
+                    await _context.EmployeeTransaction.AddAsync(employeeTransaction);
+                    await _context.SaveChangesAsync();
+                    return 1;
+            
         }
         public async Task<int> EditEmployeeTransaction(EmployeeTransactionViewModel model, Guid id)
         {
@@ -135,6 +146,7 @@ namespace Financial_Almohtasep.Services.TransactionServices
             await _context.SaveChangesAsync();
             return 1;
         }
+        
         #endregion
     }
 }

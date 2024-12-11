@@ -6,15 +6,22 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Financial_Almohtasep.Migrations
 {
     /// <inheritdoc />
-    public partial class addNewTable : Migration
+    public partial class DeleteRow : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "NetSalary",
-                table: "EmployeeTransaction");
+            migrationBuilder.DropTable(
+                name: "EmployeeNetSalaries");
 
+            migrationBuilder.DropColumn(
+                name: "NetSalaryId",
+                table: "Employees");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
             migrationBuilder.AddColumn<Guid>(
                 name: "NetSalaryId",
                 table: "Employees",
@@ -27,9 +34,9 @@ namespace Financial_Almohtasep.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    NetSalary = table.Column<float>(type: "REAL", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    NetSalary = table.Column<float>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,24 +54,6 @@ namespace Financial_Almohtasep.Migrations
                 table: "EmployeeNetSalaries",
                 column: "EmployeeId",
                 unique: true);
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "EmployeeNetSalaries");
-
-            migrationBuilder.DropColumn(
-                name: "NetSalaryId",
-                table: "Employees");
-
-            migrationBuilder.AddColumn<float>(
-                name: "NetSalary",
-                table: "EmployeeTransaction",
-                type: "REAL",
-                nullable: false,
-                defaultValue: 0f);
         }
     }
 }

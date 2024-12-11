@@ -28,6 +28,7 @@ namespace Financial_Almohtasep.Migrations
 
                     b.Property<string>("FName")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("HireDate")
@@ -38,13 +39,12 @@ namespace Financial_Almohtasep.Migrations
 
                     b.Property<string>("LName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("NetSalaryId")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumper")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<float>("Salary")
@@ -53,29 +53,6 @@ namespace Financial_Almohtasep.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeNetSalary", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<float>("NetSalary")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
-
-                    b.ToTable("EmployeeNetSalaries");
                 });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeTransaction", b =>
@@ -89,6 +66,9 @@ namespace Financial_Almohtasep.Migrations
 
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("TEXT");
+
+                    b.Property<float>("NetSalary")
+                        .HasColumnType("REAL");
 
                     b.Property<float>("Transaction")
                         .HasColumnType("REAL");
@@ -106,17 +86,6 @@ namespace Financial_Almohtasep.Migrations
                     b.ToTable("EmployeeTransaction");
                 });
 
-            modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeNetSalary", b =>
-                {
-                    b.HasOne("Financial_Almohtasep.Data.Employee", "Employee")
-                        .WithOne("EmployeeNetSalary")
-                        .HasForeignKey("Financial_Almohtasep.Data.EmployeeNetSalary", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeTransaction", b =>
                 {
                     b.HasOne("Financial_Almohtasep.Data.Employee", "Employee")
@@ -130,8 +99,6 @@ namespace Financial_Almohtasep.Migrations
 
             modelBuilder.Entity("Financial_Almohtasep.Data.Employee", b =>
                 {
-                    b.Navigation("EmployeeNetSalary");
-
                     b.Navigation("Transaction");
                 });
 #pragma warning restore 612, 618

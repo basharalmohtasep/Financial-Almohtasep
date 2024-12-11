@@ -35,5 +35,6 @@ namespace Financial_Almohtasep.Models
         [DataType(DataType.Date)]
 
         public DateTime HireDate { get; set; }
+        
     }
 }

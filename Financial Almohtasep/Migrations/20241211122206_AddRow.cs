@@ -5,25 +5,25 @@
 namespace Financial_Almohtasep.Migrations
 {
     /// <inheritdoc />
-    public partial class addnewRowToEmplooy : Migration
+    public partial class AddRow : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsDeleted",
-                table: "Employees",
-                type: "INTEGER",
+            migrationBuilder.AddColumn<float>(
+                name: "NetSalary",
+                table: "EmployeeTransaction",
+                type: "REAL",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: 0f);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsDeleted",
-                table: "Employees");
+                name: "NetSalary",
+                table: "EmployeeTransaction");
         }
     }
 }

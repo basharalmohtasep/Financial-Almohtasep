@@ -13,10 +13,12 @@ namespace Financial_Almohtasep.Data
         [Required]
         public DateTime TransactionDate { get; set; }//تاريخ السحب
         public TransactionType TransactionType { get; set; }
+        public float NetSalary { get; set; }
         [Required]
         [ForeignKey(nameof(EmployeeId))]
         public Guid EmployeeId { get; set; }
         public Employee? Employee { get; set; }
+      
 
 
     }

@@ -1,4 +1,5 @@
-﻿@using Financial_Almohtasep.Data;
+﻿@model Financial_Almohtasep.Models.EmployeeTransactionDtoModel;
+@using Financial_Almohtasep.Data;
 @{
    
     ViewData["Title"] = "EmployeeTransaction";
@@ -19,19 +20,19 @@
 
     </thead>
     <tbody>
-        @foreach (var Transaction in ViewBag.TransactionDate as List<EmployeeTransaction>)
+        @foreach (var Transaction in Model.EmployeeTransaction)
         {
             <tr>
                 <td>@Transaction.Transaction</td>
                 <td>@Transaction.TransactionType</td>
-                @* <td>@ViewBag.Salary.NetSalary</td> *@
+                <td>@Transaction.NetSalary</td>
                 <td>@Transaction.TransactionDate</td>
                 <td>
                     <a href="@Url.Action("EmployeeTransaction", "Employee", new { id = Transaction.EmployeeId })" class="btn btn-primary">View</a>
-                    <a href="@Url.Action("EditEmployee", "Employee", new { id = Transaction.EmployeeId })" class="btn btn-warning">Edit</a>
-                    @* <form asp-action="DeleteEmployee" asp-controller="Employee" asp-route-id="@Transaction.EmployeeId" method="post" style="display:inline-block;">
+                    <a href="@Url.Action("EditTransaction", "Employee", new { id = Transaction.Id })" class="btn btn-warning">Edit</a>
+                    <form asp-action="DeleteTransaction" asp-controller="Employee" asp-route-id="@Transaction.Id" method="post" style="display:inline-block;">
                         <button type="submit" class="btn btn-danger">Delete</button>
-                    </form> *@
+                    </form>
                 </td>
             </tr>
         }

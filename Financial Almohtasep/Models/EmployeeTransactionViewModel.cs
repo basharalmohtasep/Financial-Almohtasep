@@ -5,10 +5,11 @@ namespace Financial_Almohtasep.Models
 {
     public class EmployeeTransactionViewModel
     {
-
+       
         public float Transaction { get; set; }
         public DateTime TransactionDate { get; set; }
         public TransactionType TransactionType { get; set; }
         public Guid EmployeeId { get; set; }
+        
     }
 }
