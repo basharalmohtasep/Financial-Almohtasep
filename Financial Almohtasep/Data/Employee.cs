@@ -1,9 +1,11 @@
 ﻿using Financial_Almohtasep.Data.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Financial_Almohtasep.Data
 {
     public class Employee : BaseClass
     {
+        [NotMapped]
         public string FullName
         {
             get
