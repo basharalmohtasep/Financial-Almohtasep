@@ -1,8 +1,6 @@
 ﻿using Financial_Almohtasep.Data;
 using Financial_Almohtasep.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
 namespace Financial_Almohtasep.Services.EmployeeService
 {
     public class EmployeeService : IEmployeeService
@@ -17,22 +15,19 @@ namespace Financial_Almohtasep.Services.EmployeeService
         #endregion
 
         #region Methods
-
-
         public async Task<List<Employee>> GetAllEmployees()
         {
             var employees = await _context.Employees.ToListAsync();
             return employees;
         }
-
         public async Task<Employee> GetEmployeeById(Guid id)
         {
             return await _context.Employees.FindAsync(id);
         }
-        public async Task<float> GetEmployeesSalary(EmployeeTransactionViewModel model)
+        public async Task<double> GetEmployeesSalary(EmployeeTransactionViewModel model)
         {
             var Salary = await _context.Employees.Where(x => x.Id == model.EmployeeId).Select(e => e.Salary).SingleOrDefaultAsync();
-            if( Salary==0.0)
+            if (Salary == 0.0)
             {
                 return 0.0f;
             }
@@ -56,8 +51,6 @@ namespace Financial_Almohtasep.Services.EmployeeService
             await _context.SaveChangesAsync();
             return 1;
         }
-
-
         public async Task<int> EditEmployee(EmployeeDtoModel model, Guid id)
         {
             if (id == Guid.Empty)
@@ -71,7 +64,8 @@ namespace Financial_Almohtasep.Services.EmployeeService
                 {
                     return 0;
                 }
-                else { 
+                else
+                {
                     employee.FName = model.FName;
                     employee.LName = model.LName;
                     employee.PhoneNumper = model.PhoneNumper;
@@ -84,24 +78,32 @@ namespace Financial_Almohtasep.Services.EmployeeService
                 }
             }
         }
-
-
         public async Task<int> DeleteEmployee(Guid id)
         {
             if (id == Guid.Empty)
+            {
                 return 0;
-
+            }
+            
             var employee = await _context.Employees.FindAsync(id);
             if (employee is null)
+            {
                 return 0;
-
-           
+            }
+            
             employee.IsDeleted = true;
             await _context.SaveChangesAsync();
             return 1;
         }
-
-
+        public async Task<List<BaseIdNameModel<Guid>>> List()
+        {
+            return await _context.Employees.AsNoTracking()
+                .Select(a => new BaseIdNameModel<Guid>()
+                {
+                    Id = a.Id,
+                    Name = a.FullName
+                }).ToListAsync();
+        }
         #endregion
     }
 }

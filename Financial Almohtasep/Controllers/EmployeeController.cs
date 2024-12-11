@@ -1,13 +1,9 @@
 ﻿using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Models;
 using Microsoft.AspNetCore.Mvc;
 using Financial_Almohtasep.Helper;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Financial_Almohtasep.Services.EmployeeService;
 using Financial_Almohtasep.Services.TransactionServices;
+using Financial_Almohtasep.Models;
 
 namespace Financial_Almohtasep.Controllers
 {
@@ -112,6 +108,7 @@ namespace Financial_Almohtasep.Controllers
             NotificationHelper.Alert(TempData, true, "تم التعديل بنجاح");
             return RedirectToAction("Index");
         }
+        
         [HttpPost("{id}")]
         public async Task<IActionResult> DeleteEmployee(Guid id)
         {
@@ -125,13 +122,15 @@ namespace Financial_Almohtasep.Controllers
             NotificationHelper.Alert(TempData, true, "تم الحذف بنجاح");
             return RedirectToAction("Index");
         }
+        
         [HttpGet]
         public async Task<IActionResult> AddTransaction()
         {
-            var employees = await _employeeService.GetAllEmployees();
+            var employees = await _employeeService.List();
             ViewBag.EmployeeList = employees;
             return View();
         }
+        
         [HttpPost]
         public async Task<IActionResult> AddTransaction(EmployeeTransactionViewModel model)
         {
@@ -175,6 +174,7 @@ namespace Financial_Almohtasep.Controllers
                 return View(model);
             }
         }
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> EmployeeTransaction(Guid id)
         {
@@ -201,7 +201,7 @@ namespace Financial_Almohtasep.Controllers
                     }
                     else
                     {
-                        //float NetSalary = await _transactionServices.GetEmployeeNetSalary(id);
+                        //double NetSalary = await _transactionServices.GetEmployeeNetSalary(id);
                         EmployeeTransactionDtoModel model = new()
                         {
                             EmployeeTransaction = Transaction,
@@ -233,6 +233,7 @@ namespace Financial_Almohtasep.Controllers
                 return RedirectToAction("Index");
             }
         }
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> EditTransaction(Guid id)
         {
@@ -258,7 +259,7 @@ namespace Financial_Almohtasep.Controllers
                 {
                     var model = new EmployeeTransactionViewModel
                     {
-                        Transaction = Transaction.Transaction,
+                        Amount = Transaction.Amount,
                         TransactionType = Transaction.TransactionType,
                         TransactionDate = Transaction.TransactionDate,
                         EmployeeId = Transaction.EmployeeId,

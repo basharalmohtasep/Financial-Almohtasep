@@ -18,14 +18,14 @@ namespace Financial_Almohtasep.Models
         public string PhoneNumper { get; set; }
 
         [Required(ErrorMessage = "Salary is required.")]
-        [Range(0, float.MaxValue, ErrorMessage = "Salary must be a positive number.")]
-        public float Salary { get; set; } // Monthly salary
+        [Range(0, double.MaxValue, ErrorMessage = "Salary must be a positive number.")]
+        public double Salary { get; set; } // Monthly salary
 
         [Required(ErrorMessage = "Hire Date is required.")]
         [DataType(DataType.Date)]
-        
+
         public DateTime HireDate { get; set; }
 
-       
+
     }
 }

@@ -1,5 +1,6 @@
-﻿@model Financial_Almohtasep.Models.EmployeeTransactionDtoModel;
+﻿@model EmployeeTransactionDtoModel;
 @using Financial_Almohtasep.Data;
+@using Financial_Almohtasep.Models;
 @{
    
     ViewData["Title"] = "EmployeeTransaction";
@@ -23,7 +24,7 @@
         @foreach (var Transaction in Model.EmployeeTransaction)
         {
             <tr>
-                <td>@Transaction.Transaction</td>
+                <td>@Transaction.Amount</td>
                 <td>@Transaction.TransactionType</td>
                 <td>@Transaction.NetSalary</td>
                 <td>@Transaction.TransactionDate</td>

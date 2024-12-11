@@ -35,7 +35,7 @@ namespace Financial_Almohtasep.Data
             modelBuilder.Entity<EmployeeTransaction>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Transaction).IsRequired();
+                entity.Property(e => e.Amount).IsRequired();
                 entity.Property(e => e.TransactionDate).IsRequired();
                 entity.HasOne(t => t.Employee)
                       .WithMany(e => e.Transaction)
