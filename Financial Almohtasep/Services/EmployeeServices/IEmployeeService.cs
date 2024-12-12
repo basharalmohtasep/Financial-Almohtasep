@@ -11,6 +11,6 @@ namespace Financial_Almohtasep.Services.EmployeeService
         Task<int> AddEmployee(EmployeeViewModel employee);
         Task<int> EditEmployee(EmployeeDtoModel model, Guid id);
         Task<int> DeleteEmployee(Guid id);
-        Task<List<BaseIdNameModel<Guid>>> List();
+        Task<List<BaseIdNameModel<Guid>>> ListName();
     }
 }

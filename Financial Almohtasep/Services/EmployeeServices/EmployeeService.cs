@@ -95,7 +95,7 @@ namespace Financial_Almohtasep.Services.EmployeeService
             await _context.SaveChangesAsync();
             return 1;
         }
-        public async Task<List<BaseIdNameModel<Guid>>> List()
+        public async Task<List<BaseIdNameModel<Guid>>> ListName()
         {
             return await _context.Employees.AsNoTracking()
                 .Select(a => new BaseIdNameModel<Guid>()

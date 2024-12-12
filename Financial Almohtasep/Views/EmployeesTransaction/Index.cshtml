@@ -1,0 +1,43 @@
+﻿@model EmployeeTransactionDtoModel;
+@using Financial_Almohtasep.Data;
+@using Financial_Almohtasep.Models;
+@{
+
+    ViewData["Title"] = "Employees Transaction";
+}
+
+<h2> All Transaction List</h2>
+<a asp-controller="EmployeesTransaction" asp-action="AddTransaction" class="btn btn-success">Add Transaction</a>
+<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>EmployeeName</th>
+            <th>Transaction</th>
+            <th>TransactionType</th>
+            <th>NetSalary</th>
+            <th>TransactionDate</th>
+            <th>Actions</th>
+        </tr>
+
+    </thead>
+    <tbody>
+    @foreach (var Transaction in Model.EmployeeTransaction)
+    {
+        var employee = Model.BaseIdNameModel.FirstOrDefault(e => e.Id == Transaction.EmployeeId);
+
+        <tr>
+            <td>@employee?.Name</td>
+            <td>@Transaction.Amount</td>
+            <td>@Transaction.TransactionType</td>
+            <td>@Transaction.NetSalary</td>
+            <td>@Transaction.TransactionDate</td>
+
+            <td>
+                <a href="@Url.Action("EmployeeTransaction", "EmployeesTransaction", new { id = Transaction.EmployeeId })" class="btn btn-primary">View</a>
+            </td>
+        </tr>
+    }
+</tbody>
+
+</table>

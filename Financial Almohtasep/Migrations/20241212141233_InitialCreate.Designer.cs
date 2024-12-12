@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financial_Almohtasep.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241210222526_addData")]
-    partial class addData
+    [Migration("20241212141233_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,43 +45,17 @@ namespace Financial_Almohtasep.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("NetSalaryId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("PhoneNumper")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
-                    b.Property<float>("Salary")
+                    b.Property<double>("Salary")
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeNetSalary", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<float>("NetSalary")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
-
-                    b.ToTable("EmployeeNetSalaries");
                 });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeTransaction", b =>
@@ -90,13 +64,16 @@ namespace Financial_Almohtasep.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("TEXT");
 
-                    b.Property<float>("Transaction")
+                    b.Property<double>("NetSalary")
                         .HasColumnType("REAL");
 
                     b.Property<DateTime>("TransactionDate")
@@ -112,17 +89,6 @@ namespace Financial_Almohtasep.Migrations
                     b.ToTable("EmployeeTransaction");
                 });
 
-            modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeNetSalary", b =>
-                {
-                    b.HasOne("Financial_Almohtasep.Data.Employee", "Employee")
-                        .WithOne("EmployeeNetSalary")
-                        .HasForeignKey("Financial_Almohtasep.Data.EmployeeNetSalary", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeTransaction", b =>
                 {
                     b.HasOne("Financial_Almohtasep.Data.Employee", "Employee")
@@ -136,8 +102,6 @@ namespace Financial_Almohtasep.Migrations
 
             modelBuilder.Entity("Financial_Almohtasep.Data.Employee", b =>
                 {
-                    b.Navigation("EmployeeNetSalary");
-
                     b.Navigation("Transaction");
                 });
 #pragma warning restore 612, 618

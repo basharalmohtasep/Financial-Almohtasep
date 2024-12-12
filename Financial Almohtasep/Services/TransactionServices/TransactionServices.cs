@@ -2,7 +2,9 @@
 using Financial_Almohtasep.Helper;
 using Financial_Almohtasep.Models;
 using Financial_Almohtasep.Models.Enum;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 using System.Transactions;
 
 namespace Financial_Almohtasep.Services.TransactionServices
@@ -18,9 +20,13 @@ namespace Financial_Almohtasep.Services.TransactionServices
         }
         #endregion
         #region Methods
-        public async Task<List<EmployeeTransaction>> GetAllEmployeeTransaction()
+        public async Task<List<EmployeeTransaction>> GetAllEmployeen()
         {
             var EmployeeTransaction = await _context.EmployeeTransaction.ToListAsync();
+            if (EmployeeTransaction == null || EmployeeTransaction.Count == 0)
+            {
+                return null;
+            }
             return EmployeeTransaction;
         }
         public async Task<List<EmployeeTransaction>> GetTransactionByEmployeeId(Guid id)
@@ -63,14 +69,14 @@ namespace Financial_Almohtasep.Services.TransactionServices
         {
             if (model == null)
             {
-                return 0;
+                return -1;
             }
             else
             {
                 var salary = await _context.Employees.Where(x => x.Id == model.EmployeeId).Select(x => x.Salary).FirstOrDefaultAsync();
                 if (salary == 0)
                 {
-                    return 0;
+                    return -1;
                 }
                 else
                 {
@@ -98,6 +104,10 @@ namespace Financial_Almohtasep.Services.TransactionServices
         public async Task<int> AddEmployeeTransaction(EmployeeTransactionViewModel model)
         {
             var NetSalary = await GetEmployeeNetSalary(model);
+            if (NetSalary == -1)
+            {
+                return 0;
+            }
             EmployeeTransaction employeeTransaction = new()
             {
                 Amount = model.Amount,
@@ -146,6 +156,40 @@ namespace Financial_Almohtasep.Services.TransactionServices
             await _context.SaveChangesAsync();
             return 1;
         }
+        public async Task<List<EmployeeTransaction>> GetFilteredEmployeeTransactions(Guid? employeeId, DateTime? startDate, DateTime? endDate)
+        {
+            
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                return await _context.EmployeeTransaction
+                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate >= startDate && x.TransactionDate <= endDate)
+                    .ToListAsync();
+            }
+
+            
+            if (startDate.HasValue)
+            {
+                return await _context.EmployeeTransaction
+                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate <= startDate)
+                    .ToListAsync();
+            }
+
+            
+            if (endDate.HasValue)
+            {
+                return await _context.EmployeeTransaction
+                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate >= endDate)
+                    .ToListAsync();
+            }
+
+            
+            return await _context.EmployeeTransaction
+                .Where(x => x.EmployeeId == employeeId)
+                .ToListAsync();
+        }
+
+
+
 
         #endregion
     }

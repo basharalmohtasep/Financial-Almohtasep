@@ -47,7 +47,7 @@ namespace Financial_Almohtasep.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
-                    b.Property<float>("Salary")
+                    b.Property<double>("Salary")
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
@@ -61,16 +61,16 @@ namespace Financial_Almohtasep.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("TEXT");
 
-                    b.Property<float>("NetSalary")
-                        .HasColumnType("REAL");
-
-                    b.Property<float>("Transaction")
+                    b.Property<double>("NetSalary")
                         .HasColumnType("REAL");
 
                     b.Property<DateTime>("TransactionDate")

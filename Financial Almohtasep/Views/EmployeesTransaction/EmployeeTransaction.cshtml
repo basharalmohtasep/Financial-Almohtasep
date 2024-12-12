@@ -1,0 +1,66 @@
+﻿@model EmployeeTransactionDtoModel;
+@using Financial_Almohtasep.Data;
+@using Financial_Almohtasep.Models;
+@{
+    ViewData["Title"] = "Employee Transaction";
+}
+
+<h2>Transaction List</h2>
+<a asp-controller="Employee" asp-action="AddTransaction" class="btn btn-success">Add Transaction</a>
+<a asp-controller="Employee" asp-action="Index" class="btn btn-secondary">Cancel</a>
+<form asp-action="EmployeeTransaction" method="post">
+    <div>
+        <!-- Employee Dropdown Filter -->
+        <div>
+            <label for="employeeSelect">Select Employee</label>
+            <select id="employeeSelect" name="SelectedEmployeeId" required>
+                <option value="">Select Employee</option>
+                @foreach (var Employee in Model.BaseIdNameModel)
+                {
+                    <option value="@Employee.Id">@Employee.Name</option>
+                }
+            </select>
+            <div>
+                <label for="startDate">Date Range</label>
+                <input id="startDate" name="StartDate" type="date">
+                to
+                <input id="endDate" name="EndDate" type="date">
+            </div>
+        <button type="submit">Apply Filters</button>
+        </div>
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>EmployeeName</th>
+            <th>Transaction</th>
+            <th>TransactionType</th>
+            <th>NetSalary</th>
+            <th>TransactionDate</th>
+            <th>Actions</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var Transaction in Model.EmployeeTransaction)
+        {
+            var employee = Model.BaseIdNameModel.FirstOrDefault(e => e.Id == Transaction.EmployeeId);
+                <tr>
+                <td>@employee?.Name</td>
+                <td>@Transaction.Amount</td>
+                <td>@Transaction.TransactionType</td>
+                <td>@Transaction.NetSalary</td>
+                <td>@Transaction.TransactionDate</td>
+                <td>
+                    <a href="@Url.Action("EmployeeTransaction", "EmployeesTransaction", new { id = Transaction.EmployeeId })" class="btn btn-primary">View</a>
+                    <a href="@Url.Action("EditTransaction", "Employee", new { id = Transaction.Id })" class="btn btn-warning">Edit</a>
+                    <form asp-action="DeleteTransaction" asp-controller="Employee" asp-route-id="@Transaction.Id" method="post" style="display:inline-block;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        
+    </tbody>
+
+</table>

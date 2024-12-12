@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Financial_Almohtasep.Migrations
 {
     /// <inheritdoc />
-    public partial class addData : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,10 +19,9 @@ namespace Financial_Almohtasep.Migrations
                     FName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     LName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     PhoneNumper = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
-                    Salary = table.Column<float>(type: "REAL", nullable: false),
+                    Salary = table.Column<double>(type: "REAL", nullable: false),
                     HireDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    NetSalaryId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -31,33 +30,14 @@ namespace Financial_Almohtasep.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmployeeNetSalaries",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    NetSalary = table.Column<float>(type: "REAL", nullable: false),
-                    EmployeeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmployeeNetSalaries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EmployeeNetSalaries_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EmployeeTransaction",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Transaction = table.Column<float>(type: "REAL", nullable: false),
+                    Amount = table.Column<double>(type: "REAL", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TransactionType = table.Column<int>(type: "INTEGER", nullable: false),
+                    NetSalary = table.Column<double>(type: "REAL", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -73,12 +53,6 @@ namespace Financial_Almohtasep.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmployeeNetSalaries_EmployeeId",
-                table: "EmployeeNetSalaries",
-                column: "EmployeeId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EmployeeTransaction_EmployeeId",
                 table: "EmployeeTransaction",
                 column: "EmployeeId");
@@ -87,9 +61,6 @@ namespace Financial_Almohtasep.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "EmployeeNetSalaries");
-
             migrationBuilder.DropTable(
                 name: "EmployeeTransaction");
 
