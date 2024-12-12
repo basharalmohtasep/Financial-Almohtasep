@@ -1,16 +1,18 @@
-﻿using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Models;
+﻿using Financial_Almohtasep.Entity;
+using Financial_Almohtasep.Models.Base;
+using Financial_Almohtasep.Models.Employees;
 
-namespace Financial_Almohtasep.Services.EmployeeService
+namespace Financial_Almohtasep.Services.EmployeeServices
 {
     public interface IEmployeeService
     {
-        Task<List<Employee>> GetAllEmployees();
-        Task<Employee> GetEmployeeById(Guid id);
-        Task<double> GetEmployeesSalary(EmployeeTransactionViewModel model);
-        Task<int> AddEmployee(EmployeeViewModel employee);
-        Task<int> EditEmployee(EmployeeDtoModel model, Guid id);
-        Task<int> DeleteEmployee(Guid id);
-        Task<List<BaseIdNameModel<Guid>>> ListName();
+        Task<List<Employee>> GetAll();
+        Task<List<EmployeeDto>> GetAllWithFinalAmout();
+        Task<List<BaseIdNameModel<Guid>>> GetNames();
+        Task<Employee> GetById(Guid id);
+        Task<decimal> GetNetSalary(Guid id);
+        Task<int> Add(EmployeeViewModel employee);
+        Task<int> Edit(EmployeeDtoModel model, Guid id);
+        Task<int> Delete(Guid id);
     }
 }

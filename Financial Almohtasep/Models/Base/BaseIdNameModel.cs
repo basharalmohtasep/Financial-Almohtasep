@@ -1,4 +1,4 @@
-﻿namespace Financial_Almohtasep.Models
+﻿namespace Financial_Almohtasep.Models.Base
 {
     public class BaseIdNameModel<T>
     {

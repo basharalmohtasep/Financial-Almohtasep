@@ -1,20 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Financial_Almohtasep.Data;
-namespace Financial_Almohtasep.Models
+﻿using Financial_Almohtasep.Entity;
+using System.ComponentModel.DataAnnotations;
+namespace Financial_Almohtasep.Models.Employees
 {
-    public class EmployeeDtoModel
+    public class EmployeeViewModel
     {
-        public EmployeeDtoModel() { }
-        public EmployeeDtoModel(Employee employee)
-        {
-            FName = employee.FName;
-            LName = employee.LName;
-            PhoneNumper = employee.PhoneNumper;
-            Salary = employee.Salary;
-            HireDate = employee.HireDate;
-        }
-
-        public Guid Id { get; set; }
         [Required(ErrorMessage = "First Name is required.")]
         [StringLength(50, ErrorMessage = "First Name cannot exceed 50 characters.")]
         public string FName { get; set; }
@@ -29,12 +18,19 @@ namespace Financial_Almohtasep.Models
 
         [Required(ErrorMessage = "Salary is required.")]
         [Range(0, double.MaxValue, ErrorMessage = "Salary must be a positive number.")]
-        public double Salary { get; set; } // Monthly salary
+        public decimal Salary { get; set; } // Monthly salary
 
         [Required(ErrorMessage = "Hire Date is required.")]
         [DataType(DataType.Date)]
-
         public DateTime HireDate { get; set; }
 
+        public Employee MapOriginal => new()
+        {
+            FName = FName,
+            LName = LName,
+            PhoneNumper = PhoneNumper,
+            Salary = Salary,
+            HireDate = HireDate,
+        };
     }
 }

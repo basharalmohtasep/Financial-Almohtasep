@@ -1,6 +1,6 @@
-﻿using Financial_Almohtasep.Data;
+﻿using Financial_Almohtasep.Entity;
 using Financial_Almohtasep.Helper;
-using Financial_Almohtasep.Models;
+using Financial_Almohtasep.Models.Employees;
 using Financial_Almohtasep.Models.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,214 +9,84 @@ using System.Transactions;
 
 namespace Financial_Almohtasep.Services.TransactionServices
 {
-    public class TransactionServices : ITransactionServices
+    public class TransactionServices(ApplicationDbContext context) : ITransactionServices
     {
-        #region Constructor
-        private readonly ApplicationDbContext _context;
-        public TransactionServices() { }
-        public TransactionServices(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-        #endregion
+        private readonly ApplicationDbContext _context = context;
+
         #region Methods
-        public async Task<List<EmployeeTransaction>> GetAllEmployeen()
+        public async Task<List<EmployeeTransaction>> GetAllEmployees(Guid? EmployeeId = null, DateTime? StartDate = null, DateTime? EndDate = null)
         {
-            var EmployeeTransaction = await _context.EmployeeTransaction.ToListAsync();
-            if (EmployeeTransaction == null || EmployeeTransaction.Count == 0)
-            {
-                return null;
-            }
-            return EmployeeTransaction;
+            return await _context.EmployeeTransaction.AsNoTracking()
+                .Where(I =>
+                        (EmployeeId == null || EmployeeId.Value.Equals(I.EmployeeId)) &&
+                        (StartDate == null || StartDate.Value.Date <= I.TransactionDate) &&
+                        (EndDate == null || I.TransactionDate <= EndDate.Value.Date)
+                ).ToListAsync();
         }
-        public async Task<List<EmployeeTransaction>> GetTransactionByEmployeeId(Guid id)
-        {
-            if (id == Guid.Empty)
-            {
-                return null;
-            }
-            else
-            {
-                var employee = await _context.Employees.FindAsync(id);
-                if (employee == null)
-                {
-
-                    return null;
-                }
-                else
-                {
-                    var employeeTransactions = await _context.EmployeeTransaction
-                                                              .Where(x => x.EmployeeId == id)
-                                                              .ToListAsync();
-
-                    if (employeeTransactions == null || !employeeTransactions.Any())
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        return employeeTransactions;
-                    }
-                }
-
-            }
-        }
-        public async Task<EmployeeTransaction> GetTransactionById(Guid id)
+        public async Task<EmployeeTransaction> GetById(Guid id)
         {
             return await _context.EmployeeTransaction.FindAsync(id);
         }
-        public async Task<double> GetEmployeeNetSalary(EmployeeTransactionViewModel model)
+        public async Task<int> Add(EmployeeTransactionViewModel model)
         {
-            if (model == null)
-            {
-                return -1;
-            }
-            else
-            {
-                var salary = await _context.Employees.Where(x => x.Id == model.EmployeeId).Select(x => x.Salary).FirstOrDefaultAsync();
-                if (salary == 0)
-                {
-                    return -1;
-                }
-                else
-                {
-                    var NetSalary = await _context.EmployeeTransaction
-                        .Where(x => x.EmployeeId == model.EmployeeId)
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Select(x => x.NetSalary)
-                        .FirstOrDefaultAsync();
-                    if (NetSalary == 0)
-                    {
-                        NetSalary = salary;
-                    }
-
-                    if (model.TransactionType == TransactionType.Bonus)
-                    {
-                        return NetSalary += model.Amount;
-                    }
-                    else
-                    {
-                        return NetSalary -= model.Amount;
-                    }
-                }
-            }
-        }
-        public async Task<int> AddEmployeeTransaction(EmployeeTransactionViewModel model)
-        {
-            var NetSalary = await GetEmployeeNetSalary(model);
-            if (NetSalary == -1)
-            {
+            if (model.EmployeeId == Guid.Empty)
                 return 0;
-            }
-            EmployeeTransaction employeeTransaction = new()
+
+            var Employee = await _context.Employees.FindAsync(model.EmployeeId);
+            if (Employee is null)
+                return 0;
+
+            EmployeeTransaction newTransaction = new()
             {
-                Amount = model.Amount,
-                TransactionDate = model.TransactionDate,
+                SalaryChange = CalculateTransaction(model.TransactionType, model.Amount),
                 TransactionType = model.TransactionType,
-                NetSalary = NetSalary,
+                Note = model.Note,
+                TransactionDate = model.TransactionDate,
                 EmployeeId = model.EmployeeId,
+                Employee = Employee,
             };
 
-            await _context.EmployeeTransaction.AddAsync(employeeTransaction);
-            await _context.SaveChangesAsync();
-            return 1;
+            await _context.EmployeeTransaction.AddAsync(newTransaction);
+            return await _context.SaveChangesAsync();
         }
-        public async Task<int> EditEmployeeTransaction(EmployeeTransactionViewModel model, Guid id)
+        public async Task<int> Edit(Guid Id, EmployeeTransactionViewModel model)
         {
-            if (id == Guid.Empty)
-            {
-                return 0;
-            }
-            else
-            {
-                var Transaction = await _context.EmployeeTransaction.FindAsync(id);
-                if (Transaction is null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    Transaction.Amount = model.Amount;
-                    _context.EmployeeTransaction.Update(Transaction);
-                    _context.SaveChanges();
-                    return 1;
-                }
-            }
-        }
-        public async Task<int> DeleteEmployeTransactione(Guid id)
-        {
-            if (id == Guid.Empty)
+            if (Id == Guid.Empty || model.EmployeeId == Guid.Empty)
                 return 0;
 
-            var Transaction = await _context.EmployeeTransaction.FindAsync(id);
-            if (Transaction is null)
+            var EmployeeTransaction = await _context.EmployeeTransaction.FindAsync(Id);
+            if (EmployeeTransaction is null)
                 return 0;
 
-            _context.EmployeeTransaction.Remove(Transaction);
-            await _context.SaveChangesAsync();
-            return 1;
+            if (EmployeeTransaction.EmployeeId != model.EmployeeId)
+                return 0;
+
+            EmployeeTransaction.SalaryChange = CalculateTransaction(model.TransactionType, model.Amount);
+            EmployeeTransaction.TransactionType = model.TransactionType;
+            EmployeeTransaction.Note = model.Note;
+            EmployeeTransaction.TransactionDate = model.TransactionDate;
+
+            _context.EmployeeTransaction.Update(EmployeeTransaction);
+            return await _context.SaveChangesAsync();
         }
-        public async Task<List<EmployeeTransaction>> GetFilteredEmployeeTransactions(Guid? employeeId, DateTime? startDate, DateTime? endDate)
+
+        /// <summary>
+        /// Calculates the result of the transaction based on the TransactionType.
+        /// Ensure that `TransactionType` and `PreviousCompensation` and `CompensationChange` are set before calling this method.
+        /// </summary>
+        /// <returns>The calculated compensation after applying the transaction.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if the TransactionType is invalid.</exception>
+        public static decimal CalculateTransaction(TransactionType Type, decimal value)
         {
-            
-            if (startDate.HasValue && endDate.HasValue)
+            return Type switch
             {
-                return await _context.EmployeeTransaction
-                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate >= startDate && x.TransactionDate <= endDate)
-                    .ToListAsync();
-            }
-
-            
-            if (startDate.HasValue)
-            {
-                return await _context.EmployeeTransaction
-                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate >= startDate)
-                    .ToListAsync();
-            }
-
-            
-            if (endDate.HasValue)
-            {
-                return await _context.EmployeeTransaction
-                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate <= endDate)
-                    .ToListAsync();
-            }
-
-            
-            return await _context.EmployeeTransaction
-                .Where(x => x.EmployeeId == employeeId)
-                .ToListAsync();
+                TransactionType.Salary => +value,
+                TransactionType.Withdrawal => -value,
+                TransactionType.Bonus => +value,
+                TransactionType.Deduction => -value,
+                _ => throw new InvalidOperationException("Invalid transaction type provided.")
+            };
         }
-        public async Task<List<EmployeeTransaction>> GetFilteredEmployeeTransactions(DateTime? startDate, DateTime? endDate)
-        {
-            if (startDate.HasValue && endDate.HasValue)
-            {
-                return await _context.EmployeeTransaction
-                    .Where(x => x.TransactionDate >= startDate && x.TransactionDate <= endDate)
-                    .ToListAsync();
-            }
-
-            if (startDate.HasValue)
-            {
-                return await _context.EmployeeTransaction
-                    .Where(x => x.TransactionDate <= startDate)
-                    .ToListAsync();
-            }
-
-            if (endDate.HasValue)
-            {
-                return await _context.EmployeeTransaction
-                    .Where(x => x.TransactionDate >= endDate)
-                    .ToListAsync();
-            }
-
-            return await _context.EmployeeTransaction
-                .ToListAsync(); // Return all transactions if no filters are applied
-        }
-
-
-
-
         #endregion
     }
 }

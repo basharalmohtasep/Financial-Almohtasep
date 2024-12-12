@@ -1,20 +1,12 @@
-﻿using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Models;
+﻿using Financial_Almohtasep.Entity;
+using Financial_Almohtasep.Models.Employees;
 namespace Financial_Almohtasep.Services.TransactionServices
 {
     public interface ITransactionServices
     {
-
-        Task<List<EmployeeTransaction>> GetAllEmployeen();
-        Task<List<EmployeeTransaction>> GetTransactionByEmployeeId(Guid id);
-        Task<EmployeeTransaction> GetTransactionById(Guid id);
-        Task<double> GetEmployeeNetSalary(EmployeeTransactionViewModel model);
-        Task<int> AddEmployeeTransaction(EmployeeTransactionViewModel model);
-        Task<int> EditEmployeeTransaction(EmployeeTransactionViewModel model, Guid id);
-        Task<int> DeleteEmployeTransactione(Guid id);
-        Task<List<EmployeeTransaction>> GetFilteredEmployeeTransactions(Guid? employeeId, DateTime? startDate, DateTime? endDate);
-        Task<List<EmployeeTransaction>> GetFilteredEmployeeTransactions(DateTime? startDate, DateTime? endDate);
-
-
+        Task<List<EmployeeTransaction>> GetAllEmployees(Guid? EmployeeId = null, DateTime? startDate = null, DateTime? endDate = null);
+        Task<EmployeeTransaction> GetById(Guid Id);
+        Task<int> Add(EmployeeTransactionViewModel model);
+        Task<int> Edit(Guid Id, EmployeeTransactionViewModel model);
     }
 }

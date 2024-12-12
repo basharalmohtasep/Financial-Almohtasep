@@ -1,45 +1,33 @@
-﻿using Financial_Almohtasep.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Financial_Almohtasep.Helper;
-using Financial_Almohtasep.Services.EmployeeService;
 using Financial_Almohtasep.Services.TransactionServices;
-using Financial_Almohtasep.Models;
+using Financial_Almohtasep.Services.EmployeeServices;
+using Financial_Almohtasep.Entity;
+using Financial_Almohtasep.Models.Employees;
 
 namespace Financial_Almohtasep.Controllers
 {
     [Route("[controller]/[action]")]
-    public class EmployeeController : Controller
+    public class EmployeeController(IEmployeeService employeeService, ITransactionServices transactionServices) : Controller
     {
-        #region Constructor
-        private readonly IEmployeeService _employeeService;
-        private readonly ApplicationDbContext _context;
-        private readonly ITransactionServices _transactionServices;
-        public EmployeeController(IEmployeeService employeeService, ApplicationDbContext context, ITransactionServices transactionServices)
-        {
-            _employeeService = employeeService;
-            _context = context;
-            _transactionServices = transactionServices;
-        }
-        #endregion
+        private readonly IEmployeeService _employeeService = employeeService;
+        private readonly ITransactionServices _transactionServices = transactionServices;
 
         #region Methods
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.Data = await _employeeService.GetAllEmployees();
-            return View();
+            List<EmployeeDto> Data = await _employeeService.GetAllWithFinalAmout();
+            return View(Data);
         }
 
-
         [HttpGet]
-        public IActionResult AddEmployee()
+        public IActionResult Add()
         {
             return View();
         }
-
-
         [HttpPost]
-        public async Task<IActionResult> AddEmployee(EmployeeViewModel model)
+        public async Task<IActionResult> Add(EmployeeViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +41,7 @@ namespace Financial_Almohtasep.Controllers
                 return View(model);
             }
 
-            var result = await _employeeService.AddEmployee(model);
+            var result = await _employeeService.Add(model);
             if (result == 0)
             {
                 NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
@@ -64,12 +52,11 @@ namespace Financial_Almohtasep.Controllers
             return RedirectToAction("Index");
         }
 
-
         [HttpGet("{id}")]
-        public async Task<IActionResult> EditEmployee(Guid id)  
+        public async Task<IActionResult> Edit(Guid id)
         {
             
-            var employee = await _employeeService.GetEmployeeById(id);
+            var employee = await _employeeService.GetById(id);
             if (employee == null)
             {
                 NotificationHelper.Alert(TempData, false, "الموظف غير موجود");
@@ -87,10 +74,8 @@ namespace Financial_Almohtasep.Controllers
 
             return View(model);
         }
-
-
         [HttpPost("{id}")]
-        public async Task<IActionResult> EditEmployee(EmployeeDtoModel model, Guid id)
+        public async Task<IActionResult> Edit(EmployeeDtoModel model, Guid id)
         {
             if (!ModelState.IsValid)
             {
@@ -98,7 +83,7 @@ namespace Financial_Almohtasep.Controllers
                 return View(model);
             }
 
-            var result = await _employeeService.EditEmployee(model, id);
+            var result = await _employeeService.Edit(model, id);
             if (result == 0)
             {
                 NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
@@ -110,9 +95,9 @@ namespace Financial_Almohtasep.Controllers
         }
         
         [HttpPost("{id}")]
-        public async Task<IActionResult> DeleteEmployee(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _employeeService.DeleteEmployee(id);
+            var result = await _employeeService.Delete(id);
             if (result == 0)
             {
                 NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
@@ -122,10 +107,6 @@ namespace Financial_Almohtasep.Controllers
             NotificationHelper.Alert(TempData, true, "تم الحذف بنجاح");
             return RedirectToAction("Index");
         }
-        
-       
-        
-        
         #endregion
     }
 }

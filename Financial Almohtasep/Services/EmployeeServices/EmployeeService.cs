@@ -1,57 +1,52 @@
-﻿using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Models;
+﻿using Financial_Almohtasep.Entity;
+using Financial_Almohtasep.Models.Base;
+using Financial_Almohtasep.Models.Employees;
 using Microsoft.EntityFrameworkCore;
-namespace Financial_Almohtasep.Services.EmployeeService
+namespace Financial_Almohtasep.Services.EmployeeServices
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeeService(ApplicationDbContext context) : IEmployeeService
     {
-        #region Constructor
-        private readonly ApplicationDbContext _context;
-
-        public EmployeeService(ApplicationDbContext context)
-        {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-        }
-        #endregion
+        private readonly ApplicationDbContext _context = context;
 
         #region Methods
-        public async Task<List<Employee>> GetAllEmployees()
+        public async Task<List<Employee>> GetAll()
         {
-            var employees = await _context.Employees.ToListAsync();
-            return employees;
+            return await _context.Employees.AsNoTracking().ToListAsync();
         }
-        public async Task<Employee> GetEmployeeById(Guid id)
+        public async Task<List<EmployeeDto>> GetAllWithFinalAmout()
+        {
+            return await _context.Employees.AsNoTracking()
+                                                    .Include(I => I.Transaction)
+                                                    .Select(I => new EmployeeDto(I))
+                                                    .ToListAsync();
+        }
+        public async Task<List<BaseIdNameModel<Guid>>> GetNames()
+        {
+            return await _context.Employees.AsNoTracking()
+                .Select(a => new BaseIdNameModel<Guid>()
+                {
+                    Id = a.Id,
+                    Name = a.FullName
+                }).ToListAsync();
+        }
+        public async Task<Employee> GetById(Guid id)
         {
             return await _context.Employees.FindAsync(id);
         }
-        public async Task<double> GetEmployeesSalary(EmployeeTransactionViewModel model)
+        public async Task<decimal> GetNetSalary(Guid id)
         {
-            var Salary = await _context.Employees.Where(x => x.Id == model.EmployeeId).Select(e => e.Salary).SingleOrDefaultAsync();
-            if (Salary == 0.0)
-            {
-                return 0.0f;
-            }
-            return Salary;
+            return await _context.EmployeeTransaction.Where(I => I.EmployeeId.Equals(id)).SumAsync(I => I.SalaryChange);
         }
-        public async Task<int> AddEmployee(EmployeeViewModel model)
+        public async Task<int> Add(EmployeeViewModel model)
         {
             if (model is null)
                 return 0;
 
-            var employee = new Employee
-            {
-                FName = model.FName,
-                LName = model.LName,
-                PhoneNumper = model.PhoneNumper,
-                Salary = model.Salary,
-                HireDate = model.HireDate,
-            };
+            await _context.Employees.AddAsync(model.MapOriginal);
 
-            await _context.Employees.AddAsync(employee);
-            await _context.SaveChangesAsync();
-            return 1;
+            return await _context.SaveChangesAsync();
         }
-        public async Task<int> EditEmployee(EmployeeDtoModel model, Guid id)
+        public async Task<int> Edit(EmployeeDtoModel model, Guid id)
         {
             if (id == Guid.Empty)
             {
@@ -66,44 +61,27 @@ namespace Financial_Almohtasep.Services.EmployeeService
                 }
                 else
                 {
-                    employee.FName = model.FName;
-                    employee.LName = model.LName;
-                    employee.PhoneNumper = model.PhoneNumper;
-                    employee.Salary = model.Salary;
-                    employee.HireDate = model.HireDate;
+                    employee.Update(model);
 
                     _context.Employees.Update(employee);
-                    await _context.SaveChangesAsync();
-                    return 1;
+
+                    return await _context.SaveChangesAsync();
                 }
             }
         }
-        public async Task<int> DeleteEmployee(Guid id)
+        public async Task<int> Delete(Guid id)
         {
-            if (id == Guid.Empty)
-            {
-                return 0;
-            }
-            
+            if (id == Guid.Empty) return 0;
+
             var employee = await _context.Employees.FindAsync(id);
-            if (employee is null)
-            {
-                return 0;
-            }
-            
+
+            if (employee is null) return 0;
+
             employee.IsDeleted = true;
-            await _context.SaveChangesAsync();
-            return 1;
+
+            return await _context.SaveChangesAsync();
         }
-        public async Task<List<BaseIdNameModel<Guid>>> ListName()
-        {
-            return await _context.Employees.AsNoTracking()
-                .Select(a => new BaseIdNameModel<Guid>()
-                {
-                    Id = a.Id,
-                    Name = a.FullName
-                }).ToListAsync();
-        }
+
         #endregion
     }
 }

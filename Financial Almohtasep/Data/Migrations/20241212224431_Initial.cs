@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Financial_Almohtasep.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,10 +16,10 @@ namespace Financial_Almohtasep.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    FName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    LName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    PhoneNumper = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
-                    Salary = table.Column<double>(type: "REAL", nullable: false),
+                    FName = table.Column<string>(type: "TEXT", nullable: true),
+                    LName = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumper = table.Column<string>(type: "TEXT", nullable: true),
+                    Salary = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     HireDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
@@ -34,10 +34,10 @@ namespace Financial_Almohtasep.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Amount = table.Column<double>(type: "REAL", nullable: false),
+                    SalaryChange = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    Note = table.Column<string>(type: "TEXT", nullable: true),
                     TransactionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TransactionType = table.Column<int>(type: "INTEGER", nullable: false),
-                    NetSalary = table.Column<double>(type: "REAL", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
