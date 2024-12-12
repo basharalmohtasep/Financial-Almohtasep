@@ -2,14 +2,24 @@
 @using Financial_Almohtasep.Data;
 @using Financial_Almohtasep.Models;
 @{
-
     ViewData["Title"] = "Employees Transaction";
 }
 
-<h2> All Transaction List</h2>
+
+<h2>All Transaction List</h2>
 <a asp-controller="EmployeesTransaction" asp-action="AddTransaction" class="btn btn-success">Add Transaction</a>
 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
-<table class="table table-striped">
+<form asp-action="Index" method="post">
+    <div>
+        <label for="startDate">Date Range</label>
+        <input id="startDate" name="StartDate" type="date">
+        to
+        <input id="endDate" name="EndDate" type="date">
+    </div>
+    <button type="submit">Apply Filters</button>
+    </div>
+</form>
+<table class="table table-striped" id="transactionTable">
     <thead>
         <tr>
             <th>EmployeeName</th>
@@ -19,25 +29,90 @@
             <th>TransactionDate</th>
             <th>Actions</th>
         </tr>
-
     </thead>
     <tbody>
-    @foreach (var Transaction in Model.EmployeeTransaction)
-    {
-        var employee = Model.BaseIdNameModel.FirstOrDefault(e => e.Id == Transaction.EmployeeId);
+        @foreach (var Transaction in Model.EmployeeTransaction)
+        {
+            var employee = Model.BaseIdNameModel.FirstOrDefault(e => e.Id == Transaction.EmployeeId);
 
-        <tr>
-            <td>@employee?.Name</td>
-            <td>@Transaction.Amount</td>
-            <td>@Transaction.TransactionType</td>
-            <td>@Transaction.NetSalary</td>
-            <td>@Transaction.TransactionDate</td>
-
-            <td>
-                <a href="@Url.Action("EmployeeTransaction", "EmployeesTransaction", new { id = Transaction.EmployeeId })" class="btn btn-primary">View</a>
-            </td>
-        </tr>
-    }
-</tbody>
-
+            <tr>
+                <td>@employee?.Name</td>
+                <td>@Transaction.Amount</td>
+                <td>@Transaction.TransactionType</td>
+                <td>@Transaction.NetSalary</td>
+                <td>@Transaction.TransactionDate</td>
+                <td>
+                    <a href="@Url.Action("EmployeeTransaction", "EmployeesTransaction", new { id = Transaction.EmployeeId })" class="btn btn-primary">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+
+<button id="download" class="btn btn-warning">Download as PDF</button>
+<button id="downloadExcel" class="btn btn-info">Download as Excel </button>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('download').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const content = document.getElementById('transactionTable');
+
+            html2canvas(content).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+
+                const pdfWidth = 595;
+                const pdfHeight = 842;
+
+                const canvasRatio = canvas.width / canvas.height;
+                const a4Ratio = pdfWidth / pdfHeight;
+                let newCanvasWidth, newCanvasHeight;
+
+                if (canvasRatio > a4Ratio) {
+                    newCanvasWidth = pdfWidth;
+                    newCanvasHeight = pdfWidth / canvasRatio;
+                } else {
+                    newCanvasWidth = pdfHeight * canvasRatio;
+                    newCanvasHeight = pdfHeight;
+                }
+
+                const pdf = new jsPDF({
+                    orientation: newCanvasWidth > newCanvasHeight ? 'landscape' : 'portrait',
+                    unit: 'pt',
+                    format: 'a4'
+                });
+
+
+                pdf.setFontSize(18);
+                pdf.text('Employee Transaction List', pdfWidth / 2, 20, { align: 'center' });
+
+                const x = (pdfWidth - newCanvasWidth) / 2;
+                const y = 40;
+
+                pdf.addImage(imgData, 'PNG', x, y, newCanvasWidth, newCanvasHeight);
+                pdf.save('EmployeeTransactions.pdf');
+            }).catch(err => {
+                console.error('Error generating PDF', err);
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('downloadExcel').addEventListener('click', () => {
+            const table = document.getElementById('transactionTable');
+
+
+            const workbook = XLSX.utils.table_to_book(table, { sheet: "Employee Transactions" });
+            XLSX.writeFile(workbook, 'EmployeeTransactions.xlsx');
+        });
+    });
+</script>
+
+
+
+
+
+

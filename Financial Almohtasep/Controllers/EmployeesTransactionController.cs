@@ -51,6 +51,39 @@ namespace Financial_Almohtasep.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate)
+        {
+            // Get filtered employee transactions based on startDate and endDate
+            var filteredTransactions = await _transactionServices.GetFilteredEmployeeTransactions(startDate, endDate);
+
+            if (filteredTransactions == null || !filteredTransactions.Any())
+            {
+                NotificationHelper.Alert(TempData, false, "لا يوجد أي حركات ضمن الفترة المحددة.");
+                return RedirectToAction("Index");
+            }
+
+            // Get all employee names
+            var employeeNames = await _employeeService.ListName();
+
+            if (employeeNames == null || !employeeNames.Any())
+            {
+                NotificationHelper.Alert(TempData, false, "لا يوجد موظفين، يرجى إضافة موظف.");
+                return RedirectToAction("AddTransaction", "Employee");
+            }
+
+            // Prepare the DTO model for the view
+            EmployeeTransactionDtoModel employeeTransactionDtoModel = new()
+            {
+                EmployeeTransaction = filteredTransactions,
+                BaseIdNameModel = employeeNames
+            };
+
+            return View(employeeTransactionDtoModel);
+        }
+
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> EmployeeTransaction(Guid id)
         {
@@ -92,7 +125,7 @@ namespace Financial_Almohtasep.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> EmployeeTransaction(Guid? SelectedEmployeeId, DateTime? StartDate, DateTime? EndDate)
         {
-
+            
             var filteredTransactions = await _transactionServices.GetFilteredEmployeeTransactions(SelectedEmployeeId, StartDate, EndDate);
             var Employee = await _employeeService.ListName();
             if (Employee == null)
@@ -105,6 +138,11 @@ namespace Financial_Almohtasep.Controllers
                 EmployeeTransaction = filteredTransactions,
                 BaseIdNameModel= Employee
             };
+            if (SelectedEmployeeId == null || SelectedEmployeeId == Guid.Empty)
+            {
+                NotificationHelper.Alert(TempData, false, "يرجاء اداخل اسم الوظف الذي تبحث عنه ");
+                return View(model);
+            }
             return View(model);
         }
 

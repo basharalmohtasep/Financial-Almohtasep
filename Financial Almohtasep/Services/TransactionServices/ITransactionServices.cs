@@ -13,6 +13,7 @@ namespace Financial_Almohtasep.Services.TransactionServices
         Task<int> EditEmployeeTransaction(EmployeeTransactionViewModel model, Guid id);
         Task<int> DeleteEmployeTransactione(Guid id);
         Task<List<EmployeeTransaction>> GetFilteredEmployeeTransactions(Guid? employeeId, DateTime? startDate, DateTime? endDate);
+        Task<List<EmployeeTransaction>> GetFilteredEmployeeTransactions(DateTime? startDate, DateTime? endDate);
 
 
     }

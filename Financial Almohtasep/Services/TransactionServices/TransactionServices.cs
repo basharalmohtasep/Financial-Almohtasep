@@ -170,7 +170,7 @@ namespace Financial_Almohtasep.Services.TransactionServices
             if (startDate.HasValue)
             {
                 return await _context.EmployeeTransaction
-                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate <= startDate)
+                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate >= startDate)
                     .ToListAsync();
             }
 
@@ -178,7 +178,7 @@ namespace Financial_Almohtasep.Services.TransactionServices
             if (endDate.HasValue)
             {
                 return await _context.EmployeeTransaction
-                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate >= endDate)
+                    .Where(x => x.EmployeeId == employeeId && x.TransactionDate <= endDate)
                     .ToListAsync();
             }
 
@@ -186,6 +186,32 @@ namespace Financial_Almohtasep.Services.TransactionServices
             return await _context.EmployeeTransaction
                 .Where(x => x.EmployeeId == employeeId)
                 .ToListAsync();
+        }
+        public async Task<List<EmployeeTransaction>> GetFilteredEmployeeTransactions(DateTime? startDate, DateTime? endDate)
+        {
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                return await _context.EmployeeTransaction
+                    .Where(x => x.TransactionDate >= startDate && x.TransactionDate <= endDate)
+                    .ToListAsync();
+            }
+
+            if (startDate.HasValue)
+            {
+                return await _context.EmployeeTransaction
+                    .Where(x => x.TransactionDate <= startDate)
+                    .ToListAsync();
+            }
+
+            if (endDate.HasValue)
+            {
+                return await _context.EmployeeTransaction
+                    .Where(x => x.TransactionDate >= endDate)
+                    .ToListAsync();
+            }
+
+            return await _context.EmployeeTransaction
+                .ToListAsync(); // Return all transactions if no filters are applied
         }
 
 
