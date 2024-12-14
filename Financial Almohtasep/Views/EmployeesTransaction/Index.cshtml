@@ -1,14 +1,13 @@
 ﻿@model EmployeeTransactionDtoModel;
-@    using Financial_Almohtasep.Data;
-@    using Financial_Almohtasep.Models;
-    using Financial_Almohtasep.Models.Employee;
+@using Financial_Almohtasep.Data;
+@using Financial_Almohtasep.Models;
 @{
     ViewData["Title"] = "Employees Transaction";
 }
 
 
 <h2>All Transaction List</h2>
-<a asp-controller="EmployeesTransaction" asp-action="AddTransaction" class="btn btn-success">Add Transaction</a>
+<a asp-controller="EmployeesTransaction" asp-action="Add" class="btn btn-success">Add Transaction</a>
 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
 <form asp-action="Index" method="post">
     <div>
@@ -24,9 +23,9 @@
     <thead>
         <tr>
             <th>EmployeeName</th>
-            <th>Transaction</th>
+            <th>SalaryChange</th>
             <th>TransactionType</th>
-            <th>NetSalary</th>
+            <th>Note</th>
             <th>TransactionDate</th>
             <th>Actions</th>
         </tr>
@@ -38,12 +37,12 @@
 
             <tr>
                 <td>@employee?.Name</td>
-                <td>@Transaction.Amount</td>
+                <td>@Transaction.SalaryChange</td>
                 <td>@Transaction.TransactionType</td>
-                <td>@Transaction.NetSalary</td>
+                <td>@Transaction.Note</td>
                 <td>@Transaction.TransactionDate</td>
                 <td>
-                    <a href="@Url.Action("EmployeeTransaction", "EmployeesTransaction", new { id = Transaction.EmployeeId })" class="btn btn-primary">View</a>
+                    <a href="@Url.Action("View", "EmployeesTransaction", new { id = Transaction.EmployeeId })" class="btn btn-primary">View</a>
                 </td>
             </tr>
         }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Financial_Almohtasep.Entity.Base;
+namespace Financial_Almohtasep.Data;
 
 public class BaseClass
 {

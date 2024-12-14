@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Financial_Almohtasep.Entity
+namespace Financial_Almohtasep.Data
 {
     public class ApplicationDbContext : DbContext
     {

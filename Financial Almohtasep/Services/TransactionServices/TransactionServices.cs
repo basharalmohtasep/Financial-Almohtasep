@@ -1,4 +1,4 @@
-﻿using Financial_Almohtasep.Entity;
+﻿using Financial_Almohtasep.Data;
 using Financial_Almohtasep.Helper;
 using Financial_Almohtasep.Models.Employees;
 using Financial_Almohtasep.Models.Enum;
@@ -38,7 +38,7 @@ namespace Financial_Almohtasep.Services.TransactionServices
 
             EmployeeTransaction newTransaction = new()
             {
-                SalaryChange = CalculateTransaction(model.TransactionType, model.Amount),
+                SalaryChange = CalculateTransaction(model.TransactionType, model.SalaryChange),
                 TransactionType = model.TransactionType,
                 Note = model.Note,
                 TransactionDate = model.TransactionDate,
@@ -61,7 +61,7 @@ namespace Financial_Almohtasep.Services.TransactionServices
             if (EmployeeTransaction.EmployeeId != model.EmployeeId)
                 return 0;
 
-            EmployeeTransaction.SalaryChange = CalculateTransaction(model.TransactionType, model.Amount);
+            EmployeeTransaction.SalaryChange = CalculateTransaction(model.TransactionType, model.SalaryChange);
             EmployeeTransaction.TransactionType = model.TransactionType;
             EmployeeTransaction.Note = model.Note;
             EmployeeTransaction.TransactionDate = model.TransactionDate;

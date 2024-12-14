@@ -1,8 +1,8 @@
-﻿using Financial_Almohtasep.Entity.Base;
+﻿using Financial_Almohtasep.Data;
 using Financial_Almohtasep.Models.Employees;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Financial_Almohtasep.Entity
+namespace Financial_Almohtasep.Data
 {
     public class Employee : BaseClass
     {

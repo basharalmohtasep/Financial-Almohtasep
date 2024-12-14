@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Financial_Almohtasep.Models.Enum;
-using Financial_Almohtasep.Entity.Base;
+using Financial_Almohtasep.Data;
 
-namespace Financial_Almohtasep.Entity
+namespace Financial_Almohtasep.Data
 {
     public class EmployeeTransaction : BaseClass
     {

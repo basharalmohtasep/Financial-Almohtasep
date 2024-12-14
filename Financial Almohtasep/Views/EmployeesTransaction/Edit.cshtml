@@ -1,28 +1,31 @@
 ﻿@model EmployeeTransactionViewModel;
-@    using Financial_Almohtasep.Models.Enum;
-@    using Financial_Almohtasep.Data;
-@    using Financial_Almohtasep.Models;
-    using Financial_Almohtasep.Models.Employee;
-    using Financial_Almohtasep.Entity;
+@using Financial_Almohtasep.Models.Enum;
+@using Financial_Almohtasep.Data;
+@using Financial_Almohtasep.Models;
+
 
 <div class="container mt-5">
-    <h2 class="mb-4"> Add Employee Transaction </h2>
-    <form asp-action="EditTransaction" method="post" class="needs-validation">
+    <h2 class="mb-4"> Edit Employee Transaction </h2>
+    <form asp-action="Edit" method="post" class="needs-validation">
         <div class="mb-3">
             <label for="Transaction" class="form-label">Transaction Amount</label>
-            <input asp-for="Amount" class="form-control" placeholder="Enter transaction amount" />
-            <span asp-validation-for="Amount" class="text-danger"></span>
+            <input asp-for="SalaryChange" class="form-control" placeholder="Enter transaction amount" required />
+            <span asp-validation-for="SalaryChange" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label for="TransactionDate" class="form-label">Transaction Date</label>
-            <input asp-for="TransactionDate" type="date" class="form-control" readonly />
+            <input asp-for="TransactionDate" type="date" class="form-control" required />
             <span asp-validation-for="TransactionDate" class="text-danger"></span>
         </div>
-
+        <div class="mb-3">
+            <label for="TransactionDate" class="form-label">Note</label>
+            <input asp-for="Note" type="text" class="form-control"  />
+            <span asp-validation-for="Note" class="text-danger"></span>
+        </div>
         <div class="mb-3">
             <label for="TransactionType" class="form-label">Transaction Type</label>
-            <select asp-for="TransactionType" class="form-control" readonly>
+            <select asp-for="TransactionType" class="form-control" required>
                 <option value="">Select Type</option>
                 @foreach (var type in Enum.GetValues(typeof(TransactionType)))
                 {
@@ -33,11 +36,11 @@
         </div>
         <div class="mb-3">
             <label for="EmployeeId" class="form-label">Employee Name</label>
-            <select asp-for="EmployeeId" class="form-control" readonly>
+            <select asp-for="EmployeeId" class="form-control" required >
                 <option value="">Select Employee</option>
-                @foreach (var employee in ViewBag.EmployeeList as List<Employee>)
+                @foreach (var employee in Model.BaseIdNameModels)
                 {
-                    <option value="@employee.Id">@employee.FullName</option>
+                    <option value="@employee.Id">@employee.Name</option>
                 }
             </select>
             <span asp-validation-for="EmployeeId" class="text-danger"></span>

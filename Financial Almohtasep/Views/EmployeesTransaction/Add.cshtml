@@ -1,23 +1,28 @@
 ﻿@model EmployeeTransactionViewModel;
-@    using Financial_Almohtasep.Models.Enum;
-@    using Financial_Almohtasep.Data;
-@    using Financial_Almohtasep.Models;
-    using Financial_Almohtasep.Models.Employee;
-    using Financial_Almohtasep.Models.Base;
+@using Financial_Almohtasep.Models.Base
+@using Financial_Almohtasep.Models.Enum;
+@using Financial_Almohtasep.Data;
+@using Financial_Almohtasep.Models;
+
 
 <div class="container mt-5">
     <h2 class="mb-4"> Add Employee Transaction </h2>
-    <form asp-action="AddTransaction" method="post" class="needs-validation">
+    <form asp-action="Add" method="post" class="needs-validation">
         <div class="mb-3">
             <label for="Transaction" class="form-label">Transaction Amount</label>
-            <input asp-for="Amount" class="form-control" placeholder="Enter transaction amount" />
-            <span asp-validation-for="Amount" class="text-danger"></span>
+            <input asp-for="SalaryChange" class="form-control" placeholder="Enter transaction amount" />
+            <span asp-validation-for="SalaryChange" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label for="TransactionDate" class="form-label">Transaction Date</label>
             <input asp-for="TransactionDate" type="date" class="form-control" />
             <span asp-validation-for="TransactionDate" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Note" class="form-label">Note</label>
+            <input asp-for="Note" type="text" class="form-control" />
+            <span asp-validation-for="Note" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -35,7 +40,7 @@
             <label for="EmployeeId" class="form-label">Employee Name</label>
             <select asp-for="EmployeeId" class="form-control">
                 <option value="">Select Employee</option>
-                @foreach (var employee in (List<BaseIdNameModel<Guid>>)ViewBag.EmployeeList)
+                @foreach (var employee in Model.BaseIdNameModels )
                 {
                     <option value="@employee.Id">@employee.Name</option>
                 }

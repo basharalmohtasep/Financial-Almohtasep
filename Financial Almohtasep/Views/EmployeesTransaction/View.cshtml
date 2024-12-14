@@ -1,20 +1,18 @@
 ﻿@model EmployeeTransactionDtoModel;
-@    using Financial_Almohtasep.Data;
-@    using Financial_Almohtasep.Models;
-    using Financial_Almohtasep.Models.Employee;
+@using Financial_Almohtasep.Data;
+@using Financial_Almohtasep.Models;
 @{
     ViewData["Title"] = "Employee Transaction";
 }
 
 <h2>Transaction List</h2>
-<a asp-controller="Employee" asp-action="AddTransaction" class="btn btn-success">Add Transaction</a>
+<a asp-controller="EmployeesTransaction" asp-action="Add" class="btn btn-success">Add Transaction</a>
 <a asp-controller="Employee" asp-action="Index" class="btn btn-secondary">Cancel</a>
-<form asp-action="EmployeeTransaction" method="post">
+<form asp-action="View" method="post">
     <div>
-        <!-- Employee Dropdown Filter -->
         <div>
             <label for="employeeSelect">Select Employee</label>
-            <select id="employeeSelect" name="SelectedEmployeeId" >
+            <select id="employeeSelect" name="SelectedEmployeeId">
                 <option value="">Select Employee</option>
                 @foreach (var Employee in Model.BaseIdNameModel)
                 {
@@ -27,45 +25,53 @@
                 to
                 <input id="endDate" name="EndDate" type="date">
             </div>
-        <button type="submit">Apply Filters</button>
+            <button type="submit">Apply Filters</button>
         </div>
+    </div>
 </form>
+
 <table class="table table-striped" id="transactionTable">
     <thead>
         <tr>
             <th>EmployeeName</th>
             <th>Transaction</th>
             <th>TransactionType</th>
-            <th>NetSalary</th>
+            <th>Note</th>
             <th>TransactionDate</th>
             <th>Actions</th>
         </tr>
-
     </thead>
     <tbody>
         @foreach (var Transaction in Model.EmployeeTransaction)
         {
             var employee = Model.BaseIdNameModel.FirstOrDefault(e => e.Id == Transaction.EmployeeId);
-                <tr>
+            <tr>
                 <td>@employee?.Name</td>
-                <td>@Transaction.Amount</td>
+                <td>@Transaction.SalaryChange</td>
                 <td>@Transaction.TransactionType</td>
-                <td>@Transaction.NetSalary</td>
+                <td>@Transaction.Note</td>
                 <td>@Transaction.TransactionDate</td>
                 <td>
-                    <a href="@Url.Action("EmployeeTransaction", "EmployeesTransaction", new { id = Transaction.EmployeeId })" class="btn btn-primary">View</a>
-                    <a href="@Url.Action("EditTransaction", "Employee", new { id = Transaction.Id })" class="btn btn-warning">Edit</a>
+                    <a href="@Url.Action("Edit", "EmployeesTransaction", new { id = Transaction.Id })" class="btn btn-warning">Edit</a>
                     <form asp-action="DeleteTransaction" asp-controller="Employee" asp-route-id="@Transaction.Id" method="post" style="display:inline-block;">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </td>
             </tr>
         }
-        
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="1"><strong>Net Salary</strong></td>
+            <td colspan="5">
+                @Model.EmployeeTransaction.Sum(t => t.SalaryChange)
+            </td>
+        </tr>
+    </tfoot>
 </table>
 <a id="downloadPdf" class="btn btn-warning">Download as PDF</a>
-<a id="downloadExcel" class="btn btn-info">Download as Excel </a>
+<a id="downloadExcel" class="btn btn-info">Download as Excel</a>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

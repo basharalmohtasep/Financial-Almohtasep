@@ -2,7 +2,7 @@
 using Financial_Almohtasep.Helper;
 using Financial_Almohtasep.Services.TransactionServices;
 using Financial_Almohtasep.Services.EmployeeServices;
-using Financial_Almohtasep.Entity;
+using Financial_Almohtasep.Data;
 using Financial_Almohtasep.Models.Employees;
 
 namespace Financial_Almohtasep.Controllers

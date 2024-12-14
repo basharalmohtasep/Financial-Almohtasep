@@ -1,4 +1,4 @@
-﻿using Financial_Almohtasep.Entity;
+﻿using Financial_Almohtasep.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Financial_Almohtasep.Models.Employees

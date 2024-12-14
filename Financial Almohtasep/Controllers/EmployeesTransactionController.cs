@@ -1,6 +1,9 @@
 ﻿using Financial_Almohtasep.Services.EmployeeServices;
 using Financial_Almohtasep.Services.TransactionServices;
 using Microsoft.AspNetCore.Mvc;
+using Financial_Almohtasep.Helper;
+using Financial_Almohtasep.Models.Employees;
+using Financial_Almohtasep.Models.Enum;
 
 namespace Financial_Almohtasep.Controllers
 {
@@ -11,284 +14,178 @@ namespace Financial_Almohtasep.Controllers
         private readonly ITransactionServices _transactionServices = transactionServices;
 
         #region Methods
-        //[HttpGet]
-        //public async Task<IActionResult> Index()
-        //{
-        //    var AllEmployeesTransaction = await _transactionServices.GetAllEmployees();
-        //    if (AllEmployeesTransaction == null)
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "لا يوجد اي حركات  ");
-        //        return RedirectToAction("Index", "Employee");
-        //    }
-        //    else
-        //    {
-        //        var EmployeeName = await _employeeService.ListName();
-        //        if (EmployeeName == null)
-        //        {
-        //            NotificationHelper.Alert(TempData, false, "  لا يوجد موظفين يرجاء اضافة موظف ");
-        //            return RedirectToAction("AddTransaction", "Employee");
-        //        }
-        //        else
-        //        {
-        //            EmployeeTransactionDtoModel employeeTransactionDtoModel = new()
-        //            {
-        //                EmployeeTransaction = AllEmployeesTransaction,
-        //                BaseIdNameModel = EmployeeName
-        //            };
-        //            return View(employeeTransactionDtoModel);
-        //        }
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var TransactionResults = await _transactionServices.GetAllEmployees();
+            if (TransactionResults == null || TransactionResults.Count == 0)
+            {
+                NotificationHelper.Alert(TempData, false, "No Transaction found !");
+                return RedirectToAction("Index", "Home");
+            }
+            var Employeeresults = await _employeeService.GetNames();
+            if (Employeeresults == null || Employeeresults.Count == 0)
+            {
+                NotificationHelper.Alert(TempData, false, "Plaess add Employee Firstly !");
+                return RedirectToAction("Index", "Home");
+            }
+            EmployeeTransactionDtoModel Model = new()
+            {
+                EmployeeTransaction = TransactionResults,
+                BaseIdNameModel = Employeeresults
 
-        //    }
-        //}
+            };
+            return View(Model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(DateTime? StartDate, DateTime? EndDate)
+        {
+            var TransactionResults = await _transactionServices.GetAllEmployees(null, StartDate, EndDate);
+            if (TransactionResults == null)
+            {
+                NotificationHelper.Alert(TempData, false, "No Transaction found !");
+                return View();
+            }
+            var Employeeresults = await _employeeService.GetNames();
+            if (Employeeresults == null)
+            {
+                NotificationHelper.Alert(TempData, false, "Plaess add Employee Firstly !");
+                return View();
+            }
+            EmployeeTransactionDtoModel Model = new()
+            {
+                EmployeeTransaction = TransactionResults,
+                BaseIdNameModel = Employeeresults
 
-        //[HttpPost]
-        //public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate)
-        //{
-        //    // Get filtered employee transactions based on startDate and endDate
-        //    var filteredTransactions = await _transactionServices.GetFilteredEmployeeTransactions(startDate, endDate);
+            };
+            return View(Model);
 
-        //    if (filteredTransactions == null || !filteredTransactions.Any())
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "لا يوجد أي حركات ضمن الفترة المحددة.");
-        //        return RedirectToAction("Index");
-        //    }
+        }
 
-        //    // Get all employee names
-        //    var employeeNames = await _employeeService.ListName();
+        [HttpGet]
+        public async Task<IActionResult> Add()
+        {
+            var Employeeresults = await _employeeService.GetNames();
+            if (Employeeresults == null)
+            {
+                NotificationHelper.Alert(TempData, false, "Plaess add Employee Firstly !");
+                return View();
+            }
+            EmployeeTransactionViewModel Model = new()
+            {
+                BaseIdNameModels = Employeeresults
+            };
+            return View(Model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Add(EmployeeTransactionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                NotificationHelper.Alert(TempData, false, "حدث خطاء في الإدخال");
+                return View(model);
+            }
+            var Results = await _transactionServices.Add(model);
+            if (Results == 0)
+            {
+                NotificationHelper.Alert(TempData, false, "Error occurred !");
+                return View();
+            }
+            NotificationHelper.Alert(TempData, true, "Added ٍuccessfully !");
+            return RedirectToAction("Index");
+        }
 
-        //    if (employeeNames == null || !employeeNames.Any())
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "لا يوجد موظفين، يرجى إضافة موظف.");
-        //        return RedirectToAction("AddTransaction", "Employee");
-        //    }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> View(Guid id)
+        {
+            var Employeeresults = await _employeeService.GetNames();
+            if(Employeeresults == null || Employeeresults.Count==0)
+            {
+                NotificationHelper.Alert(TempData, false, "Plaess add Employee Firstly !");
+                return RedirectToAction("Index", "Home");
+            }
+            var TransactionResults = await _transactionServices.GetAllEmployees(id);
+            if(TransactionResults == null)
+            {
+                NotificationHelper.Alert(TempData, false, "No Transaction found !");
+                return RedirectToAction("Index");
+            }
+            EmployeeTransactionDtoModel dtoModel = new()
+            {
+                EmployeeTransaction = TransactionResults,
+                BaseIdNameModel = Employeeresults,
 
-        //    // Prepare the DTO model for the view
-        //    EmployeeTransactionDtoModel employeeTransactionDtoModel = new()
-        //    {
-        //        EmployeeTransaction = filteredTransactions,
-        //        BaseIdNameModel = employeeNames
-        //    };
+            };
+            return View(dtoModel);
 
-        //    return View(employeeTransactionDtoModel);
-        //}
+        }
+        [HttpPost("{id}")]
+        public async Task<IActionResult> View(Guid id, DateTime? StartDate , DateTime? EndDate )
+        {
+            var Employeeresults = await _employeeService.GetNames();
+            if (Employeeresults == null || Employeeresults.Count == 0)
+            {
+                NotificationHelper.Alert(TempData, false, "Plaess add Employee Firstly !");
+                return RedirectToAction("Index", "Home");
+            }
+            var TransactionResults = await _transactionServices.GetAllEmployees(id, StartDate, EndDate);
+            if (TransactionResults == null)
+            {
+                NotificationHelper.Alert(TempData, false, "No Transaction found !");
+                return RedirectToAction("Index");
+            }
+            EmployeeTransactionDtoModel dtoModel = new()
+            {
+                EmployeeTransaction = TransactionResults,
+                BaseIdNameModel = Employeeresults,
 
+            };
+            return View(dtoModel);
 
+        }
 
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> EmployeeTransaction(Guid id)
-        //{
-        //    if (id == Guid.Empty)
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "حدث خطاء ");
-        //        return View();
-        //    }
-        //    else
-        //    {
-        //        var Employee = await _employeeService.ListName();
-        //        if (Employee == null)
-        //        {
-        //            NotificationHelper.Alert(TempData, false, "هذا الموظف غير موجود ");
-        //            return View();
-        //        }
-        //        else
-        //        {
-        //            var Transaction = await _transactionServices.GetTransactionByEmployeeId(id);
-        //            if (Transaction == null)
-        //            {
-        //                NotificationHelper.Alert(TempData, false, "هذا الموظف ليس لدي حركات ");
-        //                return RedirectToAction("Index");
-        //            }
-        //            else
-        //            {
-        //                EmployeeTransactionDtoModel model = new()
-        //                {
-        //                    EmployeeTransaction = Transaction,
-        //                    BaseIdNameModel = Employee
-        //                };
-        //                return View(model);
-        //            }
-        //        }
-        //    }
-
-
-        //}
-        //[HttpPost("{id}")]
-        //public async Task<IActionResult> EmployeeTransaction(Guid? SelectedEmployeeId, DateTime? StartDate, DateTime? EndDate)
-        //{
-
-        //    var filteredTransactions = await _transactionServices.GetFilteredEmployeeTransactions(SelectedEmployeeId, StartDate, EndDate);
-        //    var Employee = await _employeeService.ListName();
-        //    if (Employee == null)
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "هذا الموظف غير موجود ");
-        //        return View();
-        //    }
-        //        EmployeeTransactionDtoModel model = new()
-        //    {
-        //        EmployeeTransaction = filteredTransactions,
-        //        BaseIdNameModel= Employee
-        //    };
-        //    if (SelectedEmployeeId == null || SelectedEmployeeId == Guid.Empty)
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "يرجاء اداخل اسم الوظف الذي تبحث عنه ");
-        //        return View(model);
-        //    }
-        //    return View(model);
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> AddTransaction()
-        //{
-        //    var employees = await _employeeService.ListName();
-        //    if (employees == null)
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "يجب اضافة موظف قبل اضافة حركة ");
-        //        return RedirectToAction("AddEmployee", "EmployeeController");
-        //    }
-        //    else
-        //    {
-        //        ViewBag.EmployeeList = employees;
-        //        return View();
-        //    }
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> AddTransaction(EmployeeTransactionViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (model == null)
-        //        {
-        //            NotificationHelper.Alert(TempData, false, "حدث خطاء يرجاء ادخال معلومات الحركة ");
-        //            return View();
-        //        }
-        //        else
-        //        {
-        //            var employees = await _employeeService.ListName();
-        //            if (employees == null)
-        //            {
-        //                NotificationHelper.Alert(TempData, false, "يجب اضافة موظف قبل اضافة حركة ");
-        //                return RedirectToAction("AddEmployee", "EmployeeController");
-        //            }
-        //            else
-        //            {
-        //                ViewBag.EmployeeList = employees;
-        //                var Transaction = await _transactionServices.AddEmployeeTransaction(model);
-        //                if (Transaction == 0)
-        //                {
-        //                    NotificationHelper.Alert(TempData, false, " يرجاء التاكد من راتب الموظف  ");
-        //                    return RedirectToAction("Index", "EmployeeController");
-        //                }
-        //                else
-        //                {
-        //                    NotificationHelper.Alert(TempData, true, "تم الاضافة بنجاح");
-        //                    return RedirectToAction("Index");
-        //                }
-        //            }
-
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "حدث خطاء في الإدخال");
-        //        return View(model);
-        //    }
-        //}
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> EditTransaction(Guid id)
-        //{
-        //    if (id == Guid.Empty)
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "حدث خطاء");
-        //        return RedirectToAction("Index");
-        //    }
-        //    else
-        //    {
-        //        var EmployeeName = await _employeeService.ListName();
-        //        if (EmployeeName == null)
-        //        {
-        //            NotificationHelper.Alert(TempData, false, "يجب اضافة موظف قبل اضافة حركة ");
-        //            return RedirectToAction("AddEmployee", "EmployeeController");
-        //        }
-        //        else
-        //        {
-        //            var Transaction = await _transactionServices.GetTransactionById(id);
-        //            if (Transaction == null)
-        //            {
-        //                NotificationHelper.Alert(TempData, false, "هذا الحركة غير موجودة  ");
-        //                return RedirectToAction("Index");
-        //            }
-        //            else
-        //            {
-        //                ViewBag.EmployeeList = EmployeeName;
-        //                var model = new EmployeeTransactionViewModel
-        //                {
-        //                    Amount = Transaction.Amount,
-        //                    TransactionDate = Transaction.TransactionDate,
-        //                    TransactionType = Transaction.TransactionType,
-        //                };
-        //                return View(model);
-        //            }
-        //        }
-        //    }
-
-        //}
-
-        //[HttpPost("{id}")]
-        //public async Task<IActionResult> Edit(EmployeeTransactionViewModel model, Guid id)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (id == Guid.Empty)
-        //        {
-        //            NotificationHelper.Alert(TempData, false, "حدث خطاء");
-        //            return RedirectToAction("Index");
-        //        }
-        //        else
-        //        {
-        //            var result = await _transactionServices.EditEmployeeTransaction(model, id);
-        //            if (result == 0)
-        //            {
-        //                NotificationHelper.Alert(TempData, false, " خدث خطاء هذا الجركة غير موجودة ");
-        //                return RedirectToAction("Index");
-        //            }
-        //            else
-        //            {
-        //                NotificationHelper.Alert(TempData, true, " تم التعديل بناجح  ");
-        //                return RedirectToAction("Index");
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "حدث خطاء في الإدخال");
-        //        return View(model);
-        //    }
-
-
-
-        //}
-        //public async Task<IActionResult> DeleteTransaction(Guid id)
-        //{
-        //    if (id == Guid.Empty)
-        //    {
-        //        NotificationHelper.Alert(TempData, false, "هذا الحركه غير موجود ");
-        //        return View();
-        //    }
-        //    else
-        //    {
-        //        var result = await _transactionServices.DeleteEmployeTransactione(id);
-        //        if (result == 0)
-        //        {
-        //            NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
-        //            return RedirectToAction("Index");
-        //        }
-
-        //        NotificationHelper.Alert(TempData, true, "تم الحذف بنجاح");
-        //        return RedirectToAction("Index");
-        //    }
-        //}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var employeeName = await _employeeService.GetNames();
+            if (employeeName == null)
+            {
+                NotificationHelper.Alert(TempData, false, "Plaess add Employee Firstly !");
+                return RedirectToAction("View");
+            }
+            var TransactionResults= await _transactionServices.GetById(id);
+            if (TransactionResults == null) 
+            {
+                NotificationHelper.Alert(TempData, false, "Transaction Doesn't exist");
+                return RedirectToAction("View");
+            }
+            EmployeeTransactionViewModel model = new()
+            {
+                SalaryChange = TransactionResults.SalaryChange,
+                TransactionDate = TransactionResults.TransactionDate,
+                TransactionType = TransactionResults.TransactionType,
+                Note = TransactionResults.Note,
+                BaseIdNameModels = employeeName
+            };
+            return View(model);
+        }
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Edit(Guid id, EmployeeTransactionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                NotificationHelper.Alert(TempData, false, "حدث خطاء في الإدخال");
+                return View(model);
+            }
+            var result = await _transactionServices.Edit(id, model);
+            if (result == 0)
+            {
+                NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
+                return View(model);
+            }
+            NotificationHelper.Alert(TempData, true, "تم التعديل بنجاح ");
+            return RedirectToAction("View");
+        }
 
         #endregion
     }
