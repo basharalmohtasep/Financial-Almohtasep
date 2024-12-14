@@ -3,75 +3,96 @@
 @using Financial_Almohtasep.Models;
 @{
     ViewData["Title"] = "Employee Transaction";
+    DateTime? StartDate = ViewBag.StartDate;
+    DateTime? EndDate = ViewBag.EndDate;
 }
 
-<h2>Transaction List</h2>
-<a asp-controller="EmployeesTransaction" asp-action="Add" class="btn btn-success">Add Transaction</a>
-<a asp-controller="Employee" asp-action="Index" class="btn btn-secondary">Cancel</a>
-<form asp-action="View" method="post">
-    <div>
-        <div>
-            <label for="employeeSelect">Select Employee</label>
-            <select id="employeeSelect" name="SelectedEmployeeId">
-                <option value="">Select Employee</option>
-                @foreach (var Employee in Model.BaseIdNameModel)
-                {
-                    <option value="@Employee.Id">@Employee.Name</option>
-                }
-            </select>
-            <div>
-                <label for="startDate">Date Range</label>
-                <input id="startDate" name="StartDate" type="date">
-                to
-                <input id="endDate" name="EndDate" type="date">
-            </div>
-            <button type="submit">Apply Filters</button>
-        </div>
-    </div>
-</form>
+<div class="container mt-4">
+    <h2 class="mb-4">Transaction List</h2>
 
-<table class="table table-striped" id="transactionTable">
-    <thead>
-        <tr>
-            <th>EmployeeName</th>
-            <th>Transaction</th>
-            <th>TransactionType</th>
-            <th>Note</th>
-            <th>TransactionDate</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var Transaction in Model.EmployeeTransaction)
-        {
-            var employee = Model.BaseIdNameModel.FirstOrDefault(e => e.Id == Transaction.EmployeeId);
+    <div class="d-flex justify-content-between mb-4">
+        <a asp-controller="EmployeesTransaction" asp-action="Add" class="btn btn-success">Add Transaction</a>
+        <a asp-controller="Employee" asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="employeeSelect" class="form-label">Select Employee</label>
+                <select id="employeeSelect" name="EmployeeId" class="form-select">
+                    <option value="">Select Employee</option>
+                    @foreach (var Employee in Model.BaseIdNameModel)
+                    {
+                        if (ViewBag.EmployeeId is not null && Employee.Id.Equals(ViewBag.EmployeeId))
+                        {
+                            <option value="@Employee.Id" selected>@Employee.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@Employee.Id">@Employee.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="startDate" class="form-label">Date Range</label>
+                <div class="d-flex">
+                    <input id="startDate" name="StartDate" type="date" class="form-control me-2" value="@(StartDate?.ToString("yyyy-MM-dd") ?? string.Empty)">
+                    <span class="align-self-center">to</span>
+                    <input id="endDate" name="EndDate" type="date" class="form-control ms-2" value="@(EndDate?.ToString("yyyy-MM-dd") ?? string.Empty)">
+                </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-striped table-bordered" id="transactionTable">
+        <thead class="table-dark">
             <tr>
-                <td>@employee?.Name</td>
-                <td>@Transaction.SalaryChange</td>
-                <td>@Transaction.TransactionType</td>
-                <td>@Transaction.Note</td>
-                <td>@Transaction.TransactionDate</td>
-                <td>
-                    <a href="@Url.Action("Edit", "EmployeesTransaction", new { id = Transaction.Id })" class="btn btn-warning">Edit</a>
-                    <form asp-action="DeleteTransaction" asp-controller="Employee" asp-route-id="@Transaction.Id" method="post" style="display:inline-block;">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+                <th>Employee Name</th>
+                <th>Transaction</th>
+                <th>Transaction Type</th>
+                <th>Note</th>
+                <th>Transaction Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Transaction in Model.EmployeeTransaction)
+            {
+                var employee = Model.BaseIdNameModel.FirstOrDefault(e => e.Id == Transaction.EmployeeId);
+                <tr>
+                    <td>@employee?.Name</td>
+                    <td>@Transaction.SalaryChange</td>
+                    <td>@Transaction.TransactionType</td>
+                    <td>@Transaction.Note</td>
+                    <td>@Transaction.TransactionDate</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "EmployeesTransaction", new { id = Transaction.Id })" class="btn btn-warning btn-sm">Edit</a>
+                        <form asp-action="DeleteTransaction" asp-controller="Employee" asp-route-id="@Transaction.Id" method="post" class="d-inline-block">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="1"><strong>Net Salary</strong></td>
+                <td colspan="5">
+                    <strong>@Model.EmployeeTransaction.Sum(t => t.SalaryChange)</strong>
                 </td>
             </tr>
-        }
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="1"><strong>Net Salary</strong></td>
-            <td colspan="5">
-                @Model.EmployeeTransaction.Sum(t => t.SalaryChange)
-            </td>
-        </tr>
-    </tfoot>
-</table>
-<a id="downloadPdf" class="btn btn-warning">Download as PDF</a>
-<a id="downloadExcel" class="btn btn-info">Download as Excel</a>
+        </tfoot>
+    </table>
 
+    <div class="d-flex justify-content-start">
+        <a id="downloadPdf" class="btn btn-warning me-2">Download as PDF</a>
+        <a id="downloadExcel" class="btn btn-info">Download as Excel</a>
+    </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

@@ -7,6 +7,7 @@
 <div class="container mt-5">
     <h2 class="mb-4"> Edit Employee Transaction </h2>
     <form asp-action="Edit" method="post" class="needs-validation">
+        <input type="hidden" asp-for="EmployeeId" />
         <div class="mb-3">
             <label for="Transaction" class="form-label">Transaction Amount</label>
             <input asp-for="SalaryChange" class="form-control" placeholder="Enter transaction amount" required />
@@ -26,27 +27,24 @@
         <div class="mb-3">
             <label for="TransactionType" class="form-label">Transaction Type</label>
             <select asp-for="TransactionType" class="form-control" required>
-                <option value="">Select Type</option>
-                @foreach (var type in Enum.GetValues(typeof(TransactionType)))
+                <option>Select Type</option>
+                @foreach (TransactionType type in Enum.GetValues(typeof(TransactionType)))
                 {
-                    <option value="@((int)type)">@type</option>
+                    if (type != TransactionType.None && type != TransactionType.Salary)
+                    {
+                        if (Model != null && Model.TransactionType == type)
+                        {
+                            <option value="@((int)type)" selected>@type.ToString()</option>
+                        }
+                        else
+                        {
+                            <option value="@((int)type)">@type.ToString()</option>
+                        }
+                    }
                 }
             </select>
             <span asp-validation-for="TransactionType" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label for="EmployeeId" class="form-label">Employee Name</label>
-            <select asp-for="EmployeeId" class="form-control" required >
-                <option value="">Select Employee</option>
-                @foreach (var employee in Model.BaseIdNameModels)
-                {
-                    <option value="@employee.Id">@employee.Name</option>
-                }
-            </select>
-            <span asp-validation-for="EmployeeId" class="text-danger"></span>
-        </div>
-
-
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

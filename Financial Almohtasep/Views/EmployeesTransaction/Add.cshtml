@@ -29,9 +29,19 @@
             <label for="TransactionType" class="form-label">Transaction Type</label>
             <select asp-for="TransactionType" class="form-control">
                 <option value="">Select Type</option>
-                @foreach (var type in Enum.GetValues(typeof(TransactionType)))
+                @foreach (TransactionType type in Enum.GetValues(typeof(TransactionType)))
                 {
-                    <option value="@((int)type)">@type</option>
+                    if (type != TransactionType.None && type != TransactionType.Salary)
+                    {
+                        if (Model != null && Model.TransactionType == type)
+                        {
+                            <option value="@((int)type)" selected>@type.ToString()</option>
+                        }
+                        else
+                        {
+                            <option value="@((int)type)">@type.ToString()</option>
+                        }
+                    }
                 }
             </select>
             <span asp-validation-for="TransactionType" class="text-danger"></span>
