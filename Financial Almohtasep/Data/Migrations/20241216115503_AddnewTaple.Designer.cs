@@ -3,6 +3,7 @@ using System;
 using Financial_Almohtasep.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financial_Almohtasep.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241216115503_AddnewTaple")]
+    partial class AddnewTaple
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -41,7 +44,7 @@ namespace Financial_Almohtasep.Migrations
                     b.Property<int>("chequeStatus")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("currency")
+                    b.Property<int>("Currency")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -134,11 +137,11 @@ namespace Financial_Almohtasep.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PayeeTypes")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("RelationshipType")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
