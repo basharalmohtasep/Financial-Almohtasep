@@ -37,7 +37,7 @@ namespace Financial_Almohtasep.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add()
+        public async Task<IActionResult> Add(Guid EmployeeId)
         {
             var Employeeresults = await _employeeService.GetNames();
             if (Employeeresults == null)
@@ -47,7 +47,8 @@ namespace Financial_Almohtasep.Controllers
             }
             EmployeeTransactionViewModel Model = new()
             {
-                BaseIdNameModels = Employeeresults
+                BaseIdNameModels = Employeeresults,
+                EmployeeId= EmployeeId
             };
             return View(Model);
         }

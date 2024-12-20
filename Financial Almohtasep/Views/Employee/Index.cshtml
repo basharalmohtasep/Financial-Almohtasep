@@ -8,7 +8,6 @@
 
     <div class="d-flex justify-content-between mb-4">
         <a asp-controller="Employee" asp-action="Add" class="btn btn-success">Add Employee</a>
-        <a asp-controller="EmployeesTransaction" asp-action="Add" class="btn btn-success">Add Transaction</a>
     </div>
 
     <table class="table table-striped table-bordered" id="employeeTable">
@@ -34,6 +33,7 @@
                     <td>
                         <a href="@Url.Action("Index", "EmployeesTransaction", new { EmployeeId = Employee.Id })" class="btn btn-primary btn-sm">View</a>
                         <a href="@Url.Action("Edit", "Employee", new { id = Employee.Id })" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="@Url.Action("Add", "EmployeesTransaction", new { EmployeeId = Employee.Id })" class=" btn btn-success">Add Transaction</a>
                         <form asp-action="Delete" asp-controller="Employee" asp-route-id="@Employee.Id" method="post" style="display:inline-block;">
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>

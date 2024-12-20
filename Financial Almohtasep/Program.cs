@@ -1,5 +1,4 @@
 using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Services.ChequeDetailServices;
 using Financial_Almohtasep.Services.EmployeeServices;
 using Financial_Almohtasep.Services.TransactionServices;
 using Microsoft.AspNetCore.Authentication;
@@ -17,7 +16,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ITransactionServices, TransactionServices>();
-builder.Services.AddScoped<IChequeDetailsService, ChequeDetailsService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
