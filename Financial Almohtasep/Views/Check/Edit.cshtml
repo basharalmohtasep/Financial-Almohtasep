@@ -1,0 +1,94 @@
+﻿@model CheckDtoModel;
+@{
+    ViewData["Title"] = "Edit Check";
+}
+<div class="container mt-5">
+    <h2 class="mb-4"> Edit Check </h2>
+    <form asp-action="Edit" method="post" class="needs-validation">
+        <div class="mb-3">
+            <label for="CheckNumber" class="form-label">Check Number</label>
+            <input asp-for="CheckNumber" class="form-control" placeholder="Enter your The CheckNumber" />
+            <span asp-validation-for="CheckNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="PayeeID" class="form-label">Payee Name</label>
+            <select asp-for="PayeeId" class="form-control">
+                <option value="">Select Payee</option>
+                @foreach (var Payee in Model.BaseIdNames)
+                {
+
+                    <option value="@Payee.Id">@Payee.Name</option>
+                }
+            </select>
+            <span asp-validation-for="PayeeId" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Amount" class="form-label">Amount </label>
+            <input asp-for="Amount" class="form-control" placeholder="Enter your The Amount" />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="DueDate" class="form-label">DueDate</label>
+            <input asp-for="DueDate" type="date" class="form-control" placeholder="Enter The DueDate" />
+            <span asp-validation-for="DueDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Bank" class="form-label">Bank</label>
+            <select asp-for="Bank" class="form-control">
+                <option value="">Select The Bank </option>
+                @foreach (BankName type in Enum.GetValues(typeof(BankName)))
+                {
+                    if (type != BankName.None)
+                    {
+                        if (Model != null && Model.Bank == type)
+                        {
+                            <option value="@((int)type)" selected>@type.ToString()</option>
+                        }
+                        else
+                        {
+                            <option value="@((int)type)">@type.ToString()</option>
+                        }
+                    }
+                }
+            </select>
+            <span asp-validation-for="Bank" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Currency" class="form-label">Currency </label>
+            <select asp-for="Currency" class="form-control">
+                <option value="">Select The Currency</option>
+                @foreach (Currency type in Enum.GetValues(typeof(Currency)))
+                {
+                    if (type != Currency.None)
+                    {
+                        if (Model != null && Model.Currency == type)
+                        {
+                            <option value="@((int)type)" selected>@type.ToString()</option>
+                        }
+                        else
+                        {
+                            <option value="@((int)type)">@type.ToString()</option>
+                        }
+                    }
+                }
+            </select>
+            <span asp-validation-for="Currency" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Note" class="form-label">Note</label>
+            <input asp-for="Note" type="date" class="form-control" />
+            <span asp-validation-for="Note" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

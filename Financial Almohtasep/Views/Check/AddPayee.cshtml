@@ -1,0 +1,48 @@
+﻿@model PayeeViewModel;
+@{
+    ViewData["Title"] = "Add Payy";
+}
+<div class="container mt-5">
+    <h2 class="mb-4"> Add Payee </h2>
+    <form asp-action="AddPayee" method="post" class="needs-validation">
+        <div class="mb-3">
+            <label for="Name" class="form-label">Payee Name</label>
+            <input asp-for="Name" class="form-control" placeholder="Enter  The Payee Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Type" class="form-label">Type</label>
+            <select asp-for="Type" class="form-control">
+                <option value="">Select The Type </option>
+                @foreach (PayeeType type in Enum.GetValues(typeof(PayeeType)))
+                {
+                    if (type != PayeeType.None)
+                    {
+                        if (Model != null && Model.Type == type)
+                        {
+                            <option value="@((int)type)" selected>@type.ToString()</option>
+                        }
+                        else
+                        {
+                            <option value="@((int)type)">@type.ToString()</option>
+                        }
+                    }
+                }
+            </select>
+            <span asp-validation-for="Type" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Note" class="form-label">Note</label>
+            <input asp-for="Note" type="text" class="form-control" />
+            <span asp-validation-for="Note" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

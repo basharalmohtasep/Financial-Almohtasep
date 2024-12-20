@@ -14,9 +14,9 @@ namespace Financial_Almohtasep.Data
                 return FName + " " + LName;
             }
         }
-        public required string FName { get; set; }
-        public required string LName { get; set; }
-        public required string PhoneNumper { get; set; }
+        public required string FName { get; set; }=string.Empty;
+        public required string LName { get; set; }=string.Empty ;
+        public required string PhoneNumper { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18,4)")]
         public decimal Salary { get; set; } = decimal.Zero;
         public DateTime HireDate { get; set; } = DateTime.Now;

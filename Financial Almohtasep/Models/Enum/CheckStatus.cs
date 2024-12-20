@@ -1,6 +1,6 @@
 ﻿namespace Financial_Almohtasep.Models.Enum
 {
-    public enum ChequeStatus
+    public enum CheckStatus
     {
         None=0,
         Bounced=2,
