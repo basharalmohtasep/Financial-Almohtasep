@@ -1,6 +1,6 @@
 ﻿@model CheckDtoModel;
 @{
-    ViewData["Title"] = "Edit Check";
+    ViewData["Title"] = "Edit Checks";
 }
 <div class="container mt-5">
     <h2 class="mb-4"> Edit Check </h2>
@@ -16,9 +16,16 @@
                 <option value="">Select Payee</option>
                 @foreach (var Payee in Model.BaseIdNames)
                 {
-
-                    <option value="@Payee.Id">@Payee.Name</option>
+                    if(Model.PayeeId==Payee.Id)
+                    {
+                        <option value="@Payee.Id" selected>@Payee.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@Payee.Id">@Payee.Name</option>
+                    }
                 }
+                
             </select>
             <span asp-validation-for="PayeeId" class="text-danger"></span>
         </div>
@@ -79,7 +86,7 @@
 
         <div class="mb-3">
             <label for="Note" class="form-label">Note</label>
-            <input asp-for="Note" type="date" class="form-control" />
+            <input asp-for="Note" type="text" class="form-control" />
             <span asp-validation-for="Note" class="text-danger"></span>
         </div>
 

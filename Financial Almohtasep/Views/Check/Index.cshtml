@@ -1,12 +1,13 @@
 ﻿@model CheckDto
 @{
-    ViewData["Title"] = "Check";
+    ViewData["Title"] = "Checks";
 }
 <div class="container mt-4">
     <h2 class="mb-4">Check List</h2>
     <div class="d-flex justify-content-between mb-4">
         <a asp-controller="Check" asp-action="Add" class="btn btn-success">Add Check</a>
-        <a asp-controller="Check" asp-action="AddPayee" class="btn btn-success">Add Payee</a>
+        <a asp-controller="Payee" asp-action="Add" class="btn btn-success">Add Payee</a>
+        <a asp-controller="Payee" asp-action="Index" class="btn btn-primary">View Payee</a>
     </div>
     <table class="table table-striped table-bordered" id="employeeTable">
         <thead class="table-dark">
@@ -28,7 +29,7 @@
             {
                 var Payee = Model.BaseIdNameModel.FirstOrDefault(e => e.Id == Check.PayeeID);
                 <tr>
-                    <td>@Check.Duedate.ToString("yyyy-MM-dd")</td>
+                    <td>@Check.DueDate.ToString("yyyy-MM-dd")</td>
                     <td>@Check.CheckNumber</td>
                     <td>@Check.Amount</td>
                     <td>@Payee.Name</td>
@@ -36,8 +37,9 @@
                     <td>@Check.Currency</td>
                     <td>@Check.Note</td>
                     <td>
-                        <a href="@Url.Action("Edit", "Check", new { id = Check.PayeeID })" class="btn btn-warning btn-sm">Edit</a>
-                        <form asp-action="Delete" asp-controller="Check" asp-route-id="@Check.PayeeID" method="post" style="display:inline-block;">
+                        <a href="@Url.Action("Edit", "Check", new { id = Check.Id })" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="@Url.Action("View", "Check", new { id = Check.Id })" class="btn btn-warning btn-sm">View</a>
+                        <form asp-action="Delete" asp-controller="Check" asp-route-id="@Check.Id" method="post" style="display:inline-block;">
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
                     </td>

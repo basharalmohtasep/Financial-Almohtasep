@@ -1,7 +1,7 @@
 ﻿using Financial_Almohtasep.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 
-namespace Financial_Almohtasep.Models.Check
+namespace Financial_Almohtasep.Models.Pyees
 {
     public class PayeeViewModel
     {
@@ -12,7 +12,7 @@ namespace Financial_Almohtasep.Models.Check
         [StringLength(500, ErrorMessage = "Note cannot exceed 500 characters.")]
         public string Note { get; set; }
 
-        [Required(ErrorMessage = "Payee type is required.")]
+        [Required(ErrorMessage = "Pyees type is required.")]
         public PayeeType Type { get; set; }
     }
 }

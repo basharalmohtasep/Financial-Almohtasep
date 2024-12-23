@@ -1,6 +1,7 @@
 using Financial_Almohtasep.Data;
 using Financial_Almohtasep.Services.CheckServices;
 using Financial_Almohtasep.Services.EmployeeServices;
+using Financial_Almohtasep.Services.PayeeServices;
 using Financial_Almohtasep.Services.TransactionServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ITransactionServices, TransactionServices>();
 builder.Services.AddScoped<ICheckServices, CheckServices>();
+builder .Services.AddScoped<IPayeeServices,PayeeServices>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

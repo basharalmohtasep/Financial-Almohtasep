@@ -3,17 +3,17 @@ using Financial_Almohtasep.Models.Enum;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Financial_Almohtasep.Models.Check
+namespace Financial_Almohtasep.Models.Checks
 {
     public class CheckViewModel
     {
         [Required]
-        [Display(Name = "Check Number")]
-        [Range(1, int.MaxValue, ErrorMessage = "Check number must be a positive integer.")]
+        [Display(Name = "Checks Number")]
+        [Range(1, int.MaxValue, ErrorMessage = "Checks number must be a positive integer.")]
         public int CheckNumber { get; set; } = 0;
 
-        [Required(ErrorMessage = "Payee ID is required.")]
-        [Display(Name = "Payee")]
+        [Required(ErrorMessage = "Pyees ID is required.")]
+        [Display(Name = "Pyees")]
         public Guid PayeeId { get; set; }= Guid.Empty;
 
         [Required(ErrorMessage = "Amount is required.")]

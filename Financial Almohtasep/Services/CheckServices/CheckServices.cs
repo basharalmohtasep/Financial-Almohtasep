@@ -1,6 +1,6 @@
 ﻿using Financial_Almohtasep.Data;
 using Financial_Almohtasep.Models.Base;
-using Financial_Almohtasep.Models.Check;
+using Financial_Almohtasep.Models.Checks;
 using Financial_Almohtasep.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 namespace Financial_Almohtasep.Services.CheckServices
@@ -13,14 +13,9 @@ namespace Financial_Almohtasep.Services.CheckServices
         {
             return await _context.Checks.AsNoTracking().ToListAsync();
         }
-        public async Task<List<BaseIdNameModel<Guid>>> GetPayeesName()
+        public async Task<Check> GetById(Guid Id)
         {
-            return await _context.Payees.AsNoTracking()
-                                  .Select(x => new BaseIdNameModel<Guid>()
-                                  {
-                                      Id = x.Id,
-                                      Name = x.Name
-                                  }).ToListAsync();
+            return await _context.Checks.FindAsync(Id);
         }
         public async Task<int> Add(CheckViewModel model)
         {
@@ -33,7 +28,7 @@ namespace Financial_Almohtasep.Services.CheckServices
             {
                 CheckNumber = model.CheckNumber,
                 Amount = model.Amount,
-                Duedate = model.DueDate,
+                DueDate = model.DueDate,
                 Bank = model.Bank,
                 Currency = model.Currency,
                 Note = model.Note,
@@ -42,17 +37,33 @@ namespace Financial_Almohtasep.Services.CheckServices
             await _context.Checks.AddAsync(Newcheck);
             return await _context.SaveChangesAsync();
         }
-        public async Task<int>AddPayee(PayeeViewModel model)
+        public async Task<int> Edit(CheckDtoModel model, Guid id)
         {
-            Payee Newpayee = new()
-            {
-                Name = model.Name,
-                Note = model.Note,
-                Type = model.Type,
-            };
-            await _context.AddAsync(Newpayee);
+            if (id == Guid.Empty)
+                return 0;
+            var Check =await _context.Checks.FindAsync(id);
+            if(Check is null) 
+                 return 0;
+            Check.Update(model);
             return await _context.SaveChangesAsync();
+
         }
+        public async Task<int> Delete(Guid Id)
+        {
+            if (Id == Guid.Empty)
+                return 0;
+
+            var result = await _context.Checks.FindAsync(Id);
+            if (result == null)
+            {
+                return 0;
+            }
+            _context.Checks.Remove(result);
+            return await _context.SaveChangesAsync();
+
+
+        }
+
 
         #endregion
     }

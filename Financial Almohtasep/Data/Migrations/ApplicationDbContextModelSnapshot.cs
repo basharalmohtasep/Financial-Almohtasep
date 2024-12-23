@@ -17,7 +17,7 @@ namespace Financial_Almohtasep.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
-            modelBuilder.Entity("Financial_Almohtasep.Data.Check", b =>
+            modelBuilder.Entity("Financial_Almohtasep.Data.Checks", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace Financial_Almohtasep.Migrations
                     b.Property<int>("Currency")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("Duedate")
+                    b.Property<DateTime>("DueDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Note")
@@ -117,7 +117,7 @@ namespace Financial_Almohtasep.Migrations
                     b.ToTable("EmployeeTransaction");
                 });
 
-            modelBuilder.Entity("Financial_Almohtasep.Data.Payee", b =>
+            modelBuilder.Entity("Financial_Almohtasep.Data.Pyees", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,15 +140,15 @@ namespace Financial_Almohtasep.Migrations
                     b.ToTable("Payees");
                 });
 
-            modelBuilder.Entity("Financial_Almohtasep.Data.Check", b =>
+            modelBuilder.Entity("Financial_Almohtasep.Data.Checks", b =>
                 {
-                    b.HasOne("Financial_Almohtasep.Data.Payee", "Payee")
+                    b.HasOne("Financial_Almohtasep.Data.Pyees", "Pyees")
                         .WithMany()
                         .HasForeignKey("PayeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Payee");
+                    b.Navigation("Pyees");
                 });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeTransaction", b =>
