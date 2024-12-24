@@ -9,9 +9,14 @@ namespace Financial_Almohtasep.Services.CheckServices
     {
         readonly private ApplicationDbContext _context = context;
         #region Method
-        public async Task<List<Check>> GetAll()
+        public async Task<List<Check>> GetAll(Guid? PayeeId = null, DateTime? StartDate = null, DateTime? EndDate = null)
         {
-            return await _context.Checks.AsNoTracking().ToListAsync();
+            return await _context.Checks.AsNoTracking()
+                .Where(I =>
+                        (PayeeId == null || PayeeId.Value.Equals(I.PayeeID)) &&
+                        (StartDate == null || StartDate.Value.Date <= I.DueDate) &&
+                        (EndDate == null || I.DueDate <= EndDate.Value.Date)
+                ).ToListAsync();
         }
         public async Task<Check> GetById(Guid Id)
         {

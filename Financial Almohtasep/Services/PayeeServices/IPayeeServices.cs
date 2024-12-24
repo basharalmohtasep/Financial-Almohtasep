@@ -6,7 +6,7 @@ namespace Financial_Almohtasep.Services.PayeeServices
 {
     public interface IPayeeServices
     {
-        Task<List<Payee>> GetAll();
+        Task<List<Payee>> GetAll(Guid? id = null);
         Task<Payee> GetById(Guid PayeeId);
         Task<int> Add(PayeeViewModel model);
         Task<List<BaseIdNameModel<Guid>>> GetNames();

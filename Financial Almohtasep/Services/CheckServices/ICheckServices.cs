@@ -6,7 +6,7 @@ namespace Financial_Almohtasep.Services.CheckServices
 {
     public interface ICheckServices
     {
-        Task<List<Check>> GetAll();
+        Task<List<Check>> GetAll(Guid? PayeeId = null, DateTime? StartDate = null, DateTime? EndDate = null);
         Task<Check> GetById(Guid Id);
         Task<int> Add(CheckViewModel model);
         Task<int> Edit(CheckDtoModel model, Guid id);

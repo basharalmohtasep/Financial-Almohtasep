@@ -9,9 +9,12 @@ namespace Financial_Almohtasep.Services.PayeeServices
     {
         private readonly ApplicationDbContext _context= context;
         #region Method
-        public async Task<List<Payee>> GetAll()
+        public async Task<List<Payee>> GetAll(Guid? id=null)
         {
-            return await _context.Payees.AsNoTracking().ToListAsync();
+            return await _context.Payees.AsNoTracking()
+                        .Where(I =>
+                        (id == null || id.Value.Equals(I.Id))
+                       ).ToListAsync();
         }
         public async Task<Payee> GetById(Guid PayeeId)
         {

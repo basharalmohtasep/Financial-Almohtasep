@@ -1,4 +1,5 @@
-﻿using Financial_Almohtasep.Helper;
+﻿using Financial_Almohtasep.Data;
+using Financial_Almohtasep.Helper;
 using Financial_Almohtasep.Models.Base;
 using Financial_Almohtasep.Models.Checks;
 using Financial_Almohtasep.Models.Pyees;
@@ -16,28 +17,21 @@ namespace Financial_Almohtasep.Controllers
         
         #region Method
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Guid? PayeeId , DateTime? StartDate , DateTime? EndDate )
         {
-            var checks = await _checkServices.GetAll();
-            if (checks == null || checks.Count == 0)
-            { 
-                NotificationHelper.Alert(TempData, false, "No checks found!");
-                return View();
-            }
-           
-            var payees = await _payeeServices.GetNames();
-            if (payees == null || payees.Count == 0)
+            var checks = await _checkServices.GetAll(PayeeId, StartDate, EndDate);
+            if (checks.Count == 0)
             {
-                NotificationHelper.Alert(TempData, false, "No payees found!");
-                return View(); 
+                NotificationHelper.Alert(TempData, false, "No checks found!");
             }
-            
             CheckDto checkDto = new()
             {
                 Checks = checks,
-                BaseIdNameModel = payees 
+                BaseIdNameModel = await _payeeServices.GetNames()
             };
-
+            ViewBag.PayeeId = PayeeId;
+            ViewBag.StartDate = StartDate;
+            ViewBag.EndDate = EndDate;
             return View(checkDto);
         }
        
@@ -65,7 +59,7 @@ namespace Financial_Almohtasep.Controllers
                 NotificationHelper.Alert(TempData, true, "تم الاضافة بنجاح");
                 return RedirectToAction("Index");
             }
-            return View(model1);
+            return View(model);
         }
         
         public async Task<IActionResult> View(Guid Id)

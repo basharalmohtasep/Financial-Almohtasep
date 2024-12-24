@@ -36,6 +36,6 @@ namespace Financial_Almohtasep.Models.Checks
         [StringLength(500, ErrorMessage = "Note cannot exceed 500 characters.")]
         public string Note { get; set; }= string.Empty;
 
-        public List<BaseIdNameModel<Guid>> BaseIdNames { get; set; }
+        public List<BaseIdNameModel<Guid>> BaseIdNames { get; set; }= new List<BaseIdNameModel<Guid>>();
     }
 }

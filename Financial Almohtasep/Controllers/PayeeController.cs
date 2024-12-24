@@ -12,9 +12,10 @@ namespace Financial_Almohtasep.Controllers
 
         #region Method
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Guid? id)
         {
-            var payee = await _payeeServices.GetAll();
+            ViewBag.Payees = await _payeeServices.GetAll();
+            var payee = await _payeeServices.GetAll(id);
             if (payee == null || payee.Count == 0)
             {
                 NotificationHelper.Alert(TempData, false, "No Payee found!");
@@ -24,9 +25,9 @@ namespace Financial_Almohtasep.Controllers
             {
                 Payee = payee
             };
+            ViewBag.PaeeyId = id;
             return View(model);
         }
-
         public async Task<IActionResult> Add(PayeeViewModel model)
         {
             if (ModelState.IsValid)
