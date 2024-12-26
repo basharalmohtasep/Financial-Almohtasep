@@ -43,10 +43,7 @@ namespace Financial_Almohtasep.Controllers
                 NotificationHelper.Alert(TempData, false, "ارجو ادخال مستفيد اولا");
                 return RedirectToAction("AddPayee");
             }
-            var model1 = new CheckViewModel()
-            {
-                BaseIdNames = payees
-            };
+            model.BaseIdNames = payees;
 
             if (ModelState.IsValid) 
             {

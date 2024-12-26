@@ -1,6 +1,7 @@
-﻿@model CheckeView;
+﻿@model CheckeView
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -8,134 +9,170 @@
     <title>عرض الشيك</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f8f9fa;
             margin: 0;
             padding: 20px;
         }
 
         .cheque {
-            width: 1000px;
-            height: 500px;
-            border: 1px solid #000;
+            width: 1100px;
+            height: 600px; /* Adjust height for a more cheque-like appearance */
+            border: 2px solid #000;
+            border-radius: 8px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px;
             background-color: #fff;
             position: relative;
-            background-image: url('/path/to/check-background.png'); /* Replace with your background image */
-            background-size: cover;
-            background-repeat: no-repeat;
+            background-image: url('/path/to/check-background.png'); /* Light patterned background */
+            background-size: 100% 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .cheque-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 2px solid #ccc;
         }
 
         .logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
             width: 150px;
         }
 
-        .date {
-            position: absolute;
-            top: 40px;
-            right: 30px;
-            font-size: 16px;
+        .bank-info {
+            text-align: right;
+            font-size: 14px;
+            color: #555;
         }
 
-        .title {
-            position: absolute;
-            top: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 20px;
+        .cheque-title {
+            text-align: center;
+            font-size: 22px;
             font-weight: bold;
+            color: #333;
+            margin: 20px 0;
         }
 
-        .payee-section {
-            position: absolute;
-            top: 120px;
-            right: 30px;
+        .cheque-content {
+            padding: 20px;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .value {
             font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-right: 10px;
         }
 
         .amount-section {
-            position: absolute;
-            top: 180px;
-            right: 30px;
+            border: 1px dashed #333;
+            padding: 15px;
             font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
         }
 
-        .sum-section {
-            position: absolute;
-            top: 250px;
-            right: 30px;
-            font-size: 16px;
+        .cheque-number {
+            font-size: 18px;
+            color: #555;
             font-weight: bold;
-        }
-
-        .bank-section {
-            position: absolute;
-            bottom: 80px;
-            left: 30px;
-            font-size: 16px;
+            margin-bottom: 20px;
         }
 
         .signature {
             position: absolute;
-            bottom: 50px;
+            bottom: 30px;
             right: 30px;
             text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .signature-line {
+            border-top: 1px solid #000;
+            width: 200px;
+            margin-top: 10px;
         }
 
         .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
             position: absolute;
             bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 12px;
-            color: #555;
         }
     </style>
 </head>
 
 <body>
     <div class="cheque">
-        <!-- Logo -->
+        <!-- Header -->
+        <div class="cheque-header">
+            @if (Model.Check.Bank == BankName.ArabBank)
+            {
+                <img src="~/Img/Logo2.png" alt="Bank Logo" class="logo">
+            }
+            @if (Model.Check.Bank == BankName.IslamicBank)
+            {
+                <img src="~/Img/البنك-الاسلامي-الاردني.jpg" alt="Bank Logo" class="logo">
+            }
+            @if (Model.Check.Bank == BankName.InternationalArabIslamicBank)
+            {
+                <img src="~/Img/logo.jpg" alt="Bank Logo" class="logo">
+            }
+            <div class="bank-info">
+                <p>بنك: <strong>@Model.Check.Bank</strong></p>
+                <p>تاريخ: <strong>@Model.Check.DueDate.ToString("yyyy/MM/dd")</strong></p>
+            </div>
+        </div>
 
         <!-- Title -->
-        <div class="title">المستفيد الأول</div>
+        <div class="cheque-title">شيك مصرفي</div>
 
-        <!-- Date -->
-        <div class="date">
-            التاريخ: @Model.Check.DueDate.ToString("yyyy/MM/dd")
+        <!-- Cheque Number -->
+        <div class="cheque-number">
+            رقم الشيك: <strong>@Model.Check.CheckNumber</strong>
         </div>
 
-        <!-- Payee -->
-        <div class="payee-section">
-            السيد/السيدة: <strong>@Model.Payee.Name</strong>
-        </div>
+        <!-- Content -->
+        <div class="cheque-content">
+            <!-- Payee -->
+            <div class="field">
+                <span class="label">السيد/السيدة:</span>
+                <span class="value">@Model.Payee.Name</span>
+            </div>
 
-        <!-- Amount -->
-        <div class="amount-section">
-            المبلغ: 
-            <strong>@Model.Check.Amount.ToString("N0") دينار</strong>
-            و 
-            <strong>@(Model.Check.Amount * 100 % 100) فلس</strong>
-        </div>
-
-        <!-- The Sum Of -->
-        <div class="sum-section">
-            المبلغ كتابة: <strong>@Model.Check.Amount</strong>
-        </div>
-
-        <!-- Bank -->
-        <div class="bank-section">
-            البنك: <strong>@Model.Check.Bank.ToString()</strong>
+            <!-- Amount -->
+            <div class="amount-section">
+                <p>
+                    المبلغ بالأرقام:
+                    <strong>
+                        @(Model.Check.Amount != 0
+                            ? string.Format("{0:N0}", Model.Check.Amount) + " دينار"
+                            : "المبلغ غير متوفر")
+                    </strong>
+                </p>
+                <p>المبلغ كتابة: <strong>@NumberToWordsConverter.ConvertAmountToWords(Model.Check.Amount)</strong></p>
+            </div>
         </div>
 
         <!-- Signature -->
         <div class="signature">
             <span>التوقيع:</span>
-            <div style="border-top: 1px solid #000; width: 200px; margin-top: 10px;"></div>
+            <div class="signature-line"></div>
         </div>
 
         <!-- Footer -->
