@@ -1,0 +1,37 @@
+﻿@model List<ClinetDto>
+@{
+    ViewData["Title"] = "Clinet";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Clinet List</h2>
+
+    <div class="d-flex justify-content-between mb-4">
+        <a asp-controller="Clinet" asp-action="Add" class="btn btn-success">Add Clinet</a>
+    </div>
+
+    <table class="table table-striped table-bordered" id="ClinetTable">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Clinet in Model)
+            {
+                <tr>
+                    <td>@Clinet.Name</td>
+                    <td>@Clinet.PhoneNumber</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Clinet", new { id = Clinet.Id })" class="btn btn-warning btn-sm">Edit</a>
+                        <form asp-action="Delete" asp-controller="Clinet" asp-route-id="@Clinet.Id" method="post" style="display:inline-block;">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

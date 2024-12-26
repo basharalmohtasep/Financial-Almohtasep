@@ -1,0 +1,36 @@
+﻿@model ClinetDtoEdit;
+@{
+    ViewData["Title"] = "Edit Clinet";
+}
+<div class="container mt-5">
+    <h2 class="mb-4"> Edit Employee </h2>
+    <form asp-action="Edit" method="post" class="needs-validation">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label for="Name" class="form-label">Clinet Name</label>
+            <input asp-for="Name" class="form-control" placeholder="Enter Clinet Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="PhoneNumber" class="form-label">Phone Number</label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="+9627XXXXXXXX" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Note" class="form-label">Note</label>
+            <textarea asp-for="Note" class="form-control" placeholder="Note"></textarea>
+            <span asp-validation-for="Note" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Edit</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

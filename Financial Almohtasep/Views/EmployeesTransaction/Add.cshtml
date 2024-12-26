@@ -1,8 +1,4 @@
 ﻿@model EmployeeTransactionViewModel;
-@using Financial_Almohtasep.Models.Base
-@using Financial_Almohtasep.Models.Enum;
-@using Financial_Almohtasep.Data;
-@using Financial_Almohtasep.Models;
 
 
 <div class="container mt-5">
@@ -29,9 +25,9 @@
             <label for="TransactionType" class="form-label">Transaction Type</label>
             <select asp-for="TransactionType" class="form-control">
                 <option value="">Select Type</option>
-                @foreach (TransactionType type in Enum.GetValues(typeof(TransactionType)))
+                @foreach (EmployeeTransactionType type in Enum.GetValues(typeof(EmployeeTransactionType)))
                 {
-                    if (type != TransactionType.None && type != TransactionType.Salary)
+                    if (type != EmployeeTransactionType.None && type != EmployeeTransactionType.Salary)
                     {
                         if (Model != null && Model.TransactionType == type)
                         {

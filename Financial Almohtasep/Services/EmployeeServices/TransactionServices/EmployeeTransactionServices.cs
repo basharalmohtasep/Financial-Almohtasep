@@ -1,10 +1,11 @@
 ﻿using Financial_Almohtasep.Data;
+using Financial_Almohtasep.Models.Dto.Employees.Transaction;
 using Financial_Almohtasep.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 
-namespace Financial_Almohtasep.Services.TransactionServices
+namespace Financial_Almohtasep.Services.EmployeeServices.TransactionServices
 {
-    public class TransactionServices(ApplicationDbContext context) : ITransactionServices
+    public class EmployeeTransactionServices(ApplicationDbContext context) : IEmployeeTransactionServices
     {
         private readonly ApplicationDbContext _context = context;
 
@@ -66,19 +67,19 @@ namespace Financial_Almohtasep.Services.TransactionServices
         }
 
         /// <summary>
-        /// Calculates the result of the transaction based on the TransactionType.
-        /// Ensure that `TransactionType` and `PreviousCompensation` and `CompensationChange` are set before calling this method.
+        /// Calculates the result of the transaction based on the EmployeeTransactionType.
+        /// Ensure that `EmployeeTransactionType` and `PreviousCompensation` and `CompensationChange` are set before calling this method.
         /// </summary>
         /// <returns>The calculated compensation after applying the transaction.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if the TransactionType is invalid.</exception>
-        public static decimal CalculateTransaction(TransactionType Type, decimal value)
+        /// <exception cref="InvalidOperationException">Thrown if the EmployeeTransactionType is invalid.</exception>
+        public static decimal CalculateTransaction(EmployeeTransactionType Type, decimal value)
         {
             return Type switch
             {
-                TransactionType.Salary => +value,
-                TransactionType.Withdrawal => -value,
-                TransactionType.Bonus => +value,
-                TransactionType.Deduction => -value,
+                EmployeeTransactionType.Salary => +value,
+                EmployeeTransactionType.Withdrawal => -value,
+                EmployeeTransactionType.Bonus => +value,
+                EmployeeTransactionType.Deduction => -value,
                 _ => throw new InvalidOperationException("Invalid transaction type provided.")
             };
         }

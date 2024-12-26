@@ -26,14 +26,14 @@
             {
                 <tr>
                     <td>@Employee.FullName</td>
-                    <td>@Employee.PhoneNumper</td>
+                    <td>@Employee.PhoneNumber</td>
                     <td>@Employee.Salary</td>
                     <td>@Employee.FinalAmount</td>
                     <td>@Employee.HireDate.ToString("yyyy-MM-dd")</td>
                     <td>
                         <a href="@Url.Action("Index", "EmployeesTransaction", new { EmployeeId = Employee.Id })" class="btn btn-primary btn-sm">View</a>
                         <a href="@Url.Action("Edit", "Employee", new { id = Employee.Id })" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="@Url.Action("Add", "EmployeesTransaction", new { EmployeeId = Employee.Id })" class=" btn btn-success">Add Transaction</a>
+                        <a href="@Url.Action("Add", "EmployeesTransaction", new { EmployeeId = Employee.Id })" class="btn btn-success btn-sm">Add Transaction</a>
                         <form asp-action="Delete" asp-controller="Employee" asp-route-id="@Employee.Id" method="post" style="display:inline-block;">
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>

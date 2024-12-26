@@ -1,9 +1,9 @@
 ﻿using Financial_Almohtasep.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace Financial_Almohtasep.Models
+namespace Financial_Almohtasep.Models.Dto.Employees
 {
-    public class EmployeeViewModel
+    public class EmployeeDtoAdd
     {
         [Required(ErrorMessage = "First Name is required.")]
         [StringLength(50, ErrorMessage = "First Name cannot exceed 50 characters.")]
@@ -15,7 +15,7 @@ namespace Financial_Almohtasep.Models
 
         [Required(ErrorMessage = "Phone Number is required.")]
         [RegularExpression(@"^\+9627[789]\d{7}$", ErrorMessage = "Enter a valid Jordanian phone number.")]
-        public string PhoneNumper { get; set; }
+        public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Salary is required.")]
         [Range(0, double.MaxValue, ErrorMessage = "Salary must be a positive number.")]
@@ -25,13 +25,5 @@ namespace Financial_Almohtasep.Models
         [DataType(DataType.Date)]
         public DateTime HireDate { get; set; }
 
-        public Employee MapOriginal => new()
-        {
-            FName = FName,
-            LName = LName,
-            PhoneNumper = PhoneNumper,
-            Salary = Salary,
-            HireDate = HireDate,
-        };
     }
 }

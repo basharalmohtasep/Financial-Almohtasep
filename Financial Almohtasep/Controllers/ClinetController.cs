@@ -1,23 +1,19 @@
 ﻿using Financial_Almohtasep.Helper;
-using Financial_Almohtasep.Models.Dto.Employees;
-using Financial_Almohtasep.Models.Dto.Employees;
-using Financial_Almohtasep.Models.Dto.Employees;
-using Financial_Almohtasep.Services.EmployeeServices;
-using Financial_Almohtasep.Services.EmployeeServices.TransactionServices;
+using Financial_Almohtasep.Models.Dto.Clinets;
+using Financial_Almohtasep.Services.ClinetServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Financial_Almohtasep.Controllers
 {
     [Route("[controller]/[action]")]
-    public class EmployeeController(IEmployeeService employeeService) : Controller
+    public class ClinetController(IClinetService ClinetService) : Controller
     {
-        private readonly IEmployeeService _employeeService = employeeService;
-
+        private readonly IClinetService _ClinetService = ClinetService;
 
         #region Methods
         public async Task<IActionResult> Index()
         {
-            List<EmployeeDto> Data = await _employeeService.GetAll();
+            List<ClinetDto> Data = await _ClinetService.GetAll();
             return View(Data);
         }
 
@@ -27,7 +23,7 @@ namespace Financial_Almohtasep.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Add(EmployeeDtoAdd model)
+        public async Task<IActionResult> Add(ClinetDtoAdd model)
         {
             if (!ModelState.IsValid)
             {
@@ -35,7 +31,7 @@ namespace Financial_Almohtasep.Controllers
                 return View(model);
             }
 
-            var result = await _employeeService.Add(model);
+            var result = await _ClinetService.Add(model);
             if (result == 0)
             {
                 NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
@@ -49,17 +45,17 @@ namespace Financial_Almohtasep.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var Employee = await _employeeService.GetById(id);
-            if (Employee == null)
+            var Clinet = await _ClinetService.GetById(id);
+            if (Clinet == null)
             {
                 NotificationHelper.Alert(TempData, false, "الموظف غير موجود");
                 return RedirectToAction("Index");
             }
 
-            return View(new EmployeeDtoEdit(Employee));
+            return View(new ClinetDtoEdit(Clinet));
         }
         [HttpPost("{id}")]
-        public async Task<IActionResult> Edit(EmployeeDtoEdit model, Guid id)
+        public async Task<IActionResult> Edit(ClinetDtoEdit model, Guid id)
         {
             if (id != model.Id)
             {
@@ -73,7 +69,7 @@ namespace Financial_Almohtasep.Controllers
                 return View(model);
             }
 
-            var result = await _employeeService.Edit(model, id);
+            var result = await _ClinetService.Edit(model, id);
             if (result == 0)
             {
                 NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");
@@ -87,7 +83,7 @@ namespace Financial_Almohtasep.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _employeeService.Delete(id);
+            var result = await _ClinetService.Delete(id);
             if (result == 0)
             {
                 NotificationHelper.Alert(TempData, false, "حدث خطأ غير متوقع");

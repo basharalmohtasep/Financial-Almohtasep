@@ -1,7 +1,8 @@
 ﻿using Financial_Almohtasep.Data;
-namespace Financial_Almohtasep.Services.TransactionServices
+using Financial_Almohtasep.Models.Dto.Employees.Transaction;
+namespace Financial_Almohtasep.Services.EmployeeServices.TransactionServices
 {
-    public interface ITransactionServices
+    public interface IEmployeeTransactionServices
     {
         Task<List<EmployeeTransaction>> GetAllEmployees(Guid? EmployeeId = null, DateTime? startDate = null, DateTime? endDate = null);
         Task<EmployeeTransaction> GetById(Guid Id);

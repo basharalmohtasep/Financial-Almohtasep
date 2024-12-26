@@ -3,7 +3,6 @@ using System;
 using Financial_Almohtasep.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,14 +10,39 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financial_Almohtasep.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241226203250_Initial")]
-    partial class Initial
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
+
+            modelBuilder.Entity("Financial_Almohtasep.Data.Clinet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clinets");
+                });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.Employee", b =>
                 {
@@ -41,7 +65,7 @@ namespace Financial_Almohtasep.Migrations
                     b.Property<string>("LName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PhoneNumper")
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Salary")

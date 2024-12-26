@@ -1,4 +1,4 @@
-﻿@model EmployeeViewModel;
+﻿@model EmployeeDtoAdd;
 @{
     ViewData["Title"] = "Add Employee";
 }
@@ -18,9 +18,9 @@
         </div>
 
         <div class="mb-3">
-            <label for="PhoneNumper" class="form-label">Phone Number</label>
-            <input asp-for="PhoneNumper" class="form-control" placeholder="+9627XXXXXXXX" />
-            <span asp-validation-for="PhoneNumper" class="text-danger"></span>
+            <label for="PhoneNumber" class="form-label">Phone Number</label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="+9627XXXXXXXX" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
 
         <div class="mb-3">

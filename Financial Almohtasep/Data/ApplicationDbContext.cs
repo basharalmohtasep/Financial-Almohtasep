@@ -14,10 +14,13 @@ namespace Financial_Almohtasep.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<Clinet>().HasQueryFilter(e => !e.IsDeleted);
         }
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeTransaction> EmployeeTransaction { get; set; }
+
+        public DbSet<Clinet> Clinets { get; set; }
 
     }
 }

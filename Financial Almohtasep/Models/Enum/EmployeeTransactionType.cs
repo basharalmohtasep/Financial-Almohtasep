@@ -1,6 +1,6 @@
 ﻿namespace Financial_Almohtasep.Models.Enum
 {
-    public enum TransactionType
+    public enum EmployeeTransactionType
     {
         None = 0, // For Issue And Erro Tracking
         Salary = 1,

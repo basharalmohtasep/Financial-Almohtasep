@@ -2,7 +2,7 @@
 using Financial_Almohtasep.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 
-namespace Financial_Almohtasep.Models
+namespace Financial_Almohtasep.Models.Dto.Employees.Transaction
 {
     public class EmployeeTransactionViewModel
     {
@@ -14,7 +14,7 @@ namespace Financial_Almohtasep.Models
         public DateTime TransactionDate { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "Transaction type is required.")]
-        public TransactionType TransactionType { get; set; }
+        public EmployeeTransactionType TransactionType { get; set; }
 
         [StringLength(500, ErrorMessage = "Note cannot exceed 500 characters.")]
         public string Note { get; set; }

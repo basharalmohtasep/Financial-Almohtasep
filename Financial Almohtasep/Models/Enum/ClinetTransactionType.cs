@@ -1,11 +1,9 @@
 ﻿namespace Financial_Almohtasep.Models.Enum
 {
-    public enum PayeeType
+    public enum ClinetTransactionType
     {
-
         None = 0, // For Issue And Erro Tracking
-        Individual = 1,
-        Business = 2
-
+        Debit = 1,
+        Credit = 2
     }
 }

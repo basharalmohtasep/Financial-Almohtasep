@@ -1,10 +1,12 @@
-﻿@model EmployeeDtoModel;
+﻿@model EmployeeDtoEdit;
 @{
     ViewData["Title"] = "Edit Employee";
 }
 <div class="container mt-5">
     <h2 class="mb-4"> Edit Employee </h2>
     <form asp-action="Edit" method="post" class="needs-validation">
+        <input type="hidden" asp-for="Id" />
+
         <div class="mb-3">
             <label for="FName" class="form-label">First Name</label>
             <input asp-for="FName" class="form-control" placeholder="Enter your first name" />
@@ -18,9 +20,9 @@
         </div>
 
         <div class="mb-3">
-            <label for="PhoneNumper" class="form-label">Phone Number</label>
-            <input asp-for="PhoneNumper" class="form-control" placeholder="+9627XXXXXXXX" />
-            <span asp-validation-for="PhoneNumper" class="text-danger"></span>
+            <label for="PhoneNumber" class="form-label">Phone Number</label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="+9627XXXXXXXX" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -38,3 +40,9 @@
         <button type="submit" class="btn btn-primary">Edit</button>
     </form>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

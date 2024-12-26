@@ -1,15 +1,16 @@
 ﻿using Financial_Almohtasep.Helper;
+using Financial_Almohtasep.Models.Dto.Employees.Transaction;
 using Financial_Almohtasep.Services.EmployeeServices;
-using Financial_Almohtasep.Services.TransactionServices;
+using Financial_Almohtasep.Services.EmployeeServices.TransactionServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Financial_Almohtasep.Controllers
 {
     [Route("[controller]/[action]")]
-    public class EmployeesTransactionController(IEmployeeService employeeService, ITransactionServices transactionServices) : Controller
+    public class EmployeesTransactionController(IEmployeeService employeeService, IEmployeeTransactionServices transactionServices) : Controller
     {
         private readonly IEmployeeService _employeeService = employeeService;
-        private readonly ITransactionServices _transactionServices = transactionServices;
+        private readonly IEmployeeTransactionServices _transactionServices = transactionServices;
 
         #region Methods
         [HttpGet]

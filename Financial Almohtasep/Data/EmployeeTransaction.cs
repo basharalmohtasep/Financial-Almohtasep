@@ -12,7 +12,7 @@ namespace Financial_Almohtasep.Data
         [Required]
         public DateTime TransactionDate { get; set; } = DateTime.Now;
         [Required]
-        public required TransactionType TransactionType { get; set; } = TransactionType.None;
+        public required EmployeeTransactionType TransactionType { get; set; } = EmployeeTransactionType.None;
 
 
         [ForeignKey(nameof(EmployeeId))]
