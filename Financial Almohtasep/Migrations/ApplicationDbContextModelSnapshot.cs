@@ -3,7 +3,6 @@ using System;
 using Financial_Almohtasep.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,16 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financial_Almohtasep.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241212224431_Initial")]
-    partial class Initial
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
-            modelBuilder.Entity("Financial_Almohtasep.Entity.Employee", b =>
+            modelBuilder.Entity("Financial_Almohtasep.Data.Employee", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +49,7 @@ namespace Financial_Almohtasep.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("Financial_Almohtasep.Entity.EmployeeTransaction", b =>
+            modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeTransaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,9 +80,9 @@ namespace Financial_Almohtasep.Migrations
                     b.ToTable("EmployeeTransaction");
                 });
 
-            modelBuilder.Entity("Financial_Almohtasep.Entity.EmployeeTransaction", b =>
+            modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeTransaction", b =>
                 {
-                    b.HasOne("Financial_Almohtasep.Entity.Employee", "Employee")
+                    b.HasOne("Financial_Almohtasep.Data.Employee", "Employee")
                         .WithMany("Transaction")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -94,7 +91,7 @@ namespace Financial_Almohtasep.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("Financial_Almohtasep.Entity.Employee", b =>
+            modelBuilder.Entity("Financial_Almohtasep.Data.Employee", b =>
                 {
                     b.Navigation("Transaction");
                 });

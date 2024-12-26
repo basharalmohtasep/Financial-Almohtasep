@@ -18,9 +18,6 @@ namespace Financial_Almohtasep.Data
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeTransaction> EmployeeTransaction { get; set; }
-        public DbSet<Check> Checks { get; set; }
-        public DbSet<Payee> Payees { get; set; }
-       
 
     }
 }

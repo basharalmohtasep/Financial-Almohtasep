@@ -1,6 +1,5 @@
 ﻿using Financial_Almohtasep.Data;
 using Financial_Almohtasep.Models.Base;
-using Financial_Almohtasep.Models.Employees;
 using Microsoft.EntityFrameworkCore;
 namespace Financial_Almohtasep.Services.EmployeeServices
 {

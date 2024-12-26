@@ -1,10 +1,7 @@
-﻿using Financial_Almohtasep.Services.EmployeeServices;
+﻿using Financial_Almohtasep.Helper;
+using Financial_Almohtasep.Services.EmployeeServices;
 using Financial_Almohtasep.Services.TransactionServices;
 using Microsoft.AspNetCore.Mvc;
-using Financial_Almohtasep.Helper;
-using Financial_Almohtasep.Models.Employees;
-using Financial_Almohtasep.Models.Enum;
-using Financial_Almohtasep.Data;
 
 namespace Financial_Almohtasep.Controllers
 {
@@ -48,7 +45,7 @@ namespace Financial_Almohtasep.Controllers
             EmployeeTransactionViewModel Model = new()
             {
                 BaseIdNameModels = Employeeresults,
-                EmployeeId= EmployeeId
+                EmployeeId = EmployeeId
             };
             return View(Model);
         }
@@ -79,8 +76,8 @@ namespace Financial_Almohtasep.Controllers
                 NotificationHelper.Alert(TempData, false, "Plaess add Employee Firstly !");
                 return RedirectToAction("View");
             }
-            var TransactionResults= await _transactionServices.GetById(id);
-            if (TransactionResults == null) 
+            var TransactionResults = await _transactionServices.GetById(id);
+            if (TransactionResults == null)
             {
                 NotificationHelper.Alert(TempData, false, "Transaction Doesn't exist");
                 return RedirectToAction("View");

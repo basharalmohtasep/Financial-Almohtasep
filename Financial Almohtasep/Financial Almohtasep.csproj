@@ -8,6 +8,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Check\**" />
+    <Compile Remove="Services\CheckServices\**" />
+    <Compile Remove="Views\Check\**" />
+    <Content Remove="Models\Check\**" />
+    <Content Remove="Services\CheckServices\**" />
+    <Content Remove="Views\Check\**" />
+    <EmbeddedResource Remove="Models\Check\**" />
+    <EmbeddedResource Remove="Services\CheckServices\**" />
+    <EmbeddedResource Remove="Views\Check\**" />
+    <None Remove="Models\Check\**" />
+    <None Remove="Services\CheckServices\**" />
+    <None Remove="Views\Check\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\CheckController.cs" />
+    <Compile Remove="Data\Check.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">

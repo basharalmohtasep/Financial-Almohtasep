@@ -2,8 +2,8 @@
 {
     public enum CheckStatus
     {
-        None=0,
-        Bounced=2,
-        Canceled=3
+        None = 0,
+        Bounced = 2,
+        Canceled = 3
     }
 }

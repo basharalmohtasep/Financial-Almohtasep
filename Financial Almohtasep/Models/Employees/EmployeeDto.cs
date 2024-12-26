@@ -1,8 +1,7 @@
 ﻿using Financial_Almohtasep.Data;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Financial_Almohtasep.Models.Employees
+namespace Financial_Almohtasep.Models
 {
     public class EmployeeDto(Employee employee)
     {

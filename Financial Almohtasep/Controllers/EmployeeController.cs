@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Financial_Almohtasep.Helper;
-using Financial_Almohtasep.Services.TransactionServices;
+﻿using Financial_Almohtasep.Helper;
 using Financial_Almohtasep.Services.EmployeeServices;
-using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Models.Employees;
+using Financial_Almohtasep.Services.TransactionServices;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Financial_Almohtasep.Controllers
 {
@@ -55,7 +53,7 @@ namespace Financial_Almohtasep.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            
+
             var employee = await _employeeService.GetById(id);
             if (employee == null)
             {
@@ -93,7 +91,7 @@ namespace Financial_Almohtasep.Controllers
             NotificationHelper.Alert(TempData, true, "تم التعديل بنجاح");
             return RedirectToAction("Index");
         }
-        
+
         [HttpPost("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

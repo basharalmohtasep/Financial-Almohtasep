@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Financial_Almohtasep.Controllers
 {
-    
+
     public class HomeController : Controller
 
     {
@@ -24,11 +24,12 @@ namespace Financial_Almohtasep.Controllers
         {
             return View();
         }
-        
-        public IActionResult Employee() {
+
+        public IActionResult Employee()
+        {
             return View();
         }
-        
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

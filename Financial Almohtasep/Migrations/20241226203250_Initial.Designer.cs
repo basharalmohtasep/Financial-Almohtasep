@@ -11,51 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financial_Almohtasep.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241220183427_AddTowTable")]
-    partial class AddTowTable
+    [Migration("20241226203250_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
-
-            modelBuilder.Entity("Financial_Almohtasep.Data.Checks", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Bank")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CheckNumber")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Currency")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PayeeId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PayeeId");
-
-                    b.ToTable("Checks");
-                });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.Employee", b =>
                 {
@@ -118,40 +81,6 @@ namespace Financial_Almohtasep.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("EmployeeTransaction");
-                });
-
-            modelBuilder.Entity("Financial_Almohtasep.Data.Pyees", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Payees");
-                });
-
-            modelBuilder.Entity("Financial_Almohtasep.Data.Checks", b =>
-                {
-                    b.HasOne("Financial_Almohtasep.Data.Pyees", "Pyees")
-                        .WithMany()
-                        .HasForeignKey("PayeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pyees");
                 });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeTransaction", b =>

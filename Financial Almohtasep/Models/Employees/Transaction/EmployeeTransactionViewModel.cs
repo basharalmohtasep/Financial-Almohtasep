@@ -2,7 +2,7 @@
 using Financial_Almohtasep.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 
-namespace Financial_Almohtasep.Models.Employees
+namespace Financial_Almohtasep.Models
 {
     public class EmployeeTransactionViewModel
     {

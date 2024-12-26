@@ -1,6 +1,4 @@
-﻿using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Models.Employees;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Financial_Almohtasep.Data
 {
@@ -14,8 +12,8 @@ namespace Financial_Almohtasep.Data
                 return FName + " " + LName;
             }
         }
-        public required string FName { get; set; }=string.Empty;
-        public required string LName { get; set; }=string.Empty ;
+        public required string FName { get; set; } = string.Empty;
+        public required string LName { get; set; } = string.Empty;
         public required string PhoneNumper { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18,4)")]
         public decimal Salary { get; set; } = decimal.Zero;

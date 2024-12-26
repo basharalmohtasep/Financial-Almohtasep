@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Financial_Almohtasep.Models.Enum;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Financial_Almohtasep.Models.Enum;
-using Financial_Almohtasep.Data;
 
 namespace Financial_Almohtasep.Data
 {
