@@ -26,6 +26,8 @@ public class Clinet : BaseClass
 
     public bool IsDeleted { get; set; }
 
+    public ICollection<ClinetTransaction> Transaction { get; set; }
+
     public void Update(ClinetDtoEdit model)
     {
         Name = model.Name;

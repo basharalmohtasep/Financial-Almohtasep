@@ -7,6 +7,7 @@ namespace Financial_Almohtasep.Services.ClinetServices
     public interface IClinetService
     {
         Task<List<ClinetDto>> GetAll();
+        Task<List<BaseIdNameModel<Guid>>> GetNames();
         Task<Clinet> GetById(Guid id);
         Task<int> Add(ClinetDtoAdd model);
         Task<int> Edit(ClinetDtoEdit model, Guid id);

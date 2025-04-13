@@ -3,6 +3,7 @@ using System;
 using Financial_Almohtasep.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financial_Almohtasep.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241228182847_NewTable")]
+    partial class NewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -52,6 +55,9 @@ namespace Financial_Almohtasep.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
+
+                    b.Property<decimal>("BalanceChange")
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<Guid>("ClinetId")
                         .HasColumnType("TEXT");
@@ -142,7 +148,7 @@ namespace Financial_Almohtasep.Migrations
             modelBuilder.Entity("Financial_Almohtasep.Data.ClinetTransaction", b =>
                 {
                     b.HasOne("Financial_Almohtasep.Data.Clinet", "Clinet")
-                        .WithMany("Transaction")
+                        .WithMany()
                         .HasForeignKey("ClinetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -159,11 +165,6 @@ namespace Financial_Almohtasep.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("Financial_Almohtasep.Data.Clinet", b =>
-                {
-                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.Employee", b =>

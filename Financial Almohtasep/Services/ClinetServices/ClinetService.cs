@@ -1,4 +1,5 @@
 ﻿using Financial_Almohtasep.Data;
+using Financial_Almohtasep.Models.Base;
 using Financial_Almohtasep.Models.Dto.Clinets;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +11,20 @@ namespace Financial_Almohtasep.Services.ClinetServices
 
         public async Task<List<ClinetDto>> GetAll()
         {
-            return await _context.Clinets.AsNoTracking().Select(I => new ClinetDto(I)).ToListAsync();
+            return await _context.Clinets.AsNoTracking()
+                .Include(x=>x.Transaction)
+                .Select(I => new ClinetDto(I)).ToListAsync();
         }
 
+        public async Task<List<BaseIdNameModel<Guid>>> GetNames()
+        {
+            return await _context.Clinets.AsNoTracking()
+                .Select(a => new BaseIdNameModel<Guid>()
+                {
+                    Id = a.Id,
+                    Name = a.Name
+                }).ToListAsync();
+        }
         public async Task<Clinet> GetById(Guid id)
         {
             return await _context.Clinets.FindAsync(id);

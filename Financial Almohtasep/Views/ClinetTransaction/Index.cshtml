@@ -1,0 +1,142 @@
+﻿@model List<ClinetTransactionDto>;
+@{
+    ViewData["Title"] = "Client Transaction";
+    DateTime? StartDate = ViewBag.StartDate;
+    DateTime? EndDate = ViewBag.EndDate;
+    var clients = ViewBag.clinetName as List<BaseIdNameModel<Guid>>;
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">All Transaction List</h2>
+
+    <div class="d-flex justify-content-between mb-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="ClinetSelect" class="form-label">Select Clinet</label>
+                <select id="ClinetSelect" name="ClinetId" class="form-select">
+                    <option value="">Select Clinet</option>
+                    @foreach (var Clinet in ViewBag.clinetName)
+                    {
+                        if (ViewBag.ClinetId is not null && Clinet.Id.Equals(ViewBag.ClinetId))
+                        {
+                            <option value="@Clinet.Id" selected>@Clinet.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@Clinet.Id">@Clinet.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="startDate" class="form-label">Date Range</label>
+                <div class="d-flex">
+                    <input id="startDate" name="StartDate" type="date" class="form-control me-2" value="@(StartDate?.ToString("yyyy-MM-dd") ?? string.Empty)">
+                    <span class="align-self-center">to</span>
+                    <input id="endDate" name="EndDate" type="date" class="form-control ms-2" value="@(EndDate?.ToString("yyyy-MM-dd") ?? string.Empty)">
+                </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-striped table-bordered" id="transactionTable">
+        <thead class="table-dark">
+            <tr>
+                <th>Client Name</th>
+                <th>Amount</th>
+                <th>TransactionDate</th>
+                <th>Transaction Type</th>
+                <th>TransactionType</th>
+                <th> Note</th>
+            </tr>
+        </thead>
+       <tbody>
+    @foreach (var transaction in Model)
+    {
+                var client = clients?.FirstOrDefault(c => c.Id == transaction.ClinetId)?.Name;
+
+                   
+        <tr>
+             <td>@(client != null ? client : "Unknown")</td>
+            <td>@transaction.Amount</td>
+            <td>@transaction.TransactionDate.ToString("yyyy-MM-dd")</td>
+            <td>@transaction.TransactionType</td>
+            <td>@transaction.Note</td>
+        </tr>
+    }
+</tbody>
+    </table>
+
+    <div class="d-flex justify-content-start">
+        <button id="download" class="btn btn-warning me-2">Download as PDF</button>
+        <button id="downloadExcel" class="btn btn-info">Download as Excel</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('download').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const content = document.getElementById('transactionTable');
+
+            html2canvas(content).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+
+                const pdfWidth = 595;
+                const pdfHeight = 842;
+
+                const canvasRatio = canvas.width / canvas.height;
+                const a4Ratio = pdfWidth / pdfHeight;
+                let newCanvasWidth, newCanvasHeight;
+
+                if (canvasRatio > a4Ratio) {
+                    newCanvasWidth = pdfWidth;
+                    newCanvasHeight = pdfWidth / canvasRatio;
+                } else {
+                    newCanvasWidth = pdfHeight * canvasRatio;
+                    newCanvasHeight = pdfHeight;
+                }
+
+                const pdf = new jsPDF({
+                    orientation: newCanvasWidth > newCanvasHeight ? 'landscape' : 'portrait',
+                    unit: 'pt',
+                    format: 'a4'
+                });
+
+                pdf.setFontSize(18);
+                pdf.text('Employee Transaction List', pdfWidth / 2, 20, { align: 'center' });
+
+                const x = (pdfWidth - newCanvasWidth) / 2;
+                const y = 40;
+
+                pdf.addImage(imgData, 'PNG', x, y, newCanvasWidth, newCanvasHeight);
+                pdf.save('EmployeeTransactions.pdf');
+            }).catch(err => {
+                console.error('Error generating PDF', err);
+            });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('downloadExcel').addEventListener('click', () => {
+            const table = document.getElementById('transactionTable');
+
+            const workbook = XLSX.utils.table_to_book(table, { sheet: "Employee Transactions" });
+            XLSX.writeFile(workbook, 'EmployeeTransactions.xlsx');
+        });
+    });
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
