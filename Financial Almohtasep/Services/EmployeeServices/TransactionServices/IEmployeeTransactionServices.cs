@@ -8,5 +8,6 @@ namespace Financial_Almohtasep.Services.EmployeeServices.TransactionServices
         Task<EmployeeTransaction> GetById(Guid Id);
         Task<int> Add(EmployeeTransactionViewModel model);
         Task<int> Edit(Guid Id, EmployeeTransactionViewModel model);
+        Task AddMonthlySalary();
     }
 }

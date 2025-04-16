@@ -2,7 +2,7 @@
 
 namespace Financial_Almohtasep.Models.Dto.Clinets.ClinetTransactions
 {
-    public class ClinetTransactionDtoEdit:ClinetTransactionDtoAdd
+    public class ClinetTransactionDtoEdit : ClinetTransactionDtoAdd
     {
         public ClinetTransactionDtoEdit() { }
         public ClinetTransactionDtoEdit(ClinetTransaction model)

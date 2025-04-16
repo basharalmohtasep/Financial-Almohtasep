@@ -1,8 +1,5 @@
-﻿using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Helper;
-using Financial_Almohtasep.Models.Dto.Clinets;
+﻿using Financial_Almohtasep.Helper;
 using Financial_Almohtasep.Models.Dto.Clinets.ClinetTransactions;
-using Financial_Almohtasep.Models.Dto.Employees.Transaction;
 using Financial_Almohtasep.Services.ClinetServices;
 using Financial_Almohtasep.Services.ClinetServices.ClinetTransactionServices;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +12,6 @@ namespace Financial_Almohtasep.Controllers
         private readonly IClinetService _clinetService = clinetService;
         private readonly IClinetTransactionService _clinetTransaction = clinetTransaction;
 
-        #region Methods
         [HttpGet]
         public async Task<IActionResult> Index(Guid? ClinetId, DateTime? StartDate, DateTime? EndDate)
         {
@@ -37,7 +33,7 @@ namespace Financial_Almohtasep.Controllers
             ViewBag.StartDate = StartDate;
             ViewBag.EndDate = EndDate;
             //if (ClinetId is not null)
-                //return View("View", Data);
+            //return View("View", Data);
             return View("Index", Data);
         }
 
@@ -74,6 +70,5 @@ namespace Financial_Almohtasep.Controllers
             NotificationHelper.Alert(TempData, true, "Added ٍuccessfully !");
             return RedirectToAction("Index");
         }
-        #endregion
     }
 }

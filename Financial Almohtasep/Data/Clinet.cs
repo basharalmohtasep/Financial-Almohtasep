@@ -1,6 +1,5 @@
 ﻿using Financial_Almohtasep.Models.Dto.Clinets;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 
 namespace Financial_Almohtasep.Data;
 
@@ -8,7 +7,7 @@ public class Clinet : BaseClass
 {
     public Clinet()
     {
-            
+
     }
     public Clinet(ClinetDtoAdd model)
     {

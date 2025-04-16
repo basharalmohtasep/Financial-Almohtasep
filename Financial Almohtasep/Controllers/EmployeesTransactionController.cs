@@ -12,7 +12,6 @@ namespace Financial_Almohtasep.Controllers
         private readonly IEmployeeService _employeeService = employeeService;
         private readonly IEmployeeTransactionServices _transactionServices = transactionServices;
 
-        #region Methods
         [HttpGet]
         public async Task<IActionResult> Index(Guid? EmployeeId, DateTime? StartDate, DateTime? EndDate)
         {
@@ -29,9 +28,8 @@ namespace Financial_Almohtasep.Controllers
             ViewBag.EmployeeId = EmployeeId;
             ViewBag.StartDate = StartDate;
             ViewBag.EndDate = EndDate;
-            if (EmployeeId is not null)
-                return View("View", Model);
-            return View("Index", Model);
+
+            return View("View", Model);
         }
 
         [HttpGet]
@@ -110,7 +108,5 @@ namespace Financial_Almohtasep.Controllers
             NotificationHelper.Alert(TempData, true, "تم التعديل بنجاح ");
             return RedirectToAction("View");
         }
-
-        #endregion
     }
 }

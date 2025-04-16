@@ -1,7 +1,5 @@
-﻿using Financial_Almohtasep.Models.Base;
-using Financial_Almohtasep.Models.Enum;
+﻿using Financial_Almohtasep.Models.Enum;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Financial_Almohtasep.Models.Dto.Clinets.ClinetTransactions
 {
@@ -12,7 +10,7 @@ namespace Financial_Almohtasep.Models.Dto.Clinets.ClinetTransactions
         public decimal Amount { get; set; }
 
         [Required(ErrorMessage = "Transaction Date is required.")]
-        public DateTime TransactionDate { get; set; }= DateTime.Now;
+        public DateTime TransactionDate { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "Transaction Type is required.")]
         public ClinetTransactionType TransactionType { get; set; }

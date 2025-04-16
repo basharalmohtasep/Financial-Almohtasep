@@ -83,6 +83,51 @@ namespace Financial_Almohtasep.Services.EmployeeServices.TransactionServices
                 _ => throw new InvalidOperationException("Invalid transaction type provided.")
             };
         }
+        public async Task AddMonthlySalary()
+        {
+            var employees = await _context.Employees
+                .Where(e => !e.IsDeleted)
+                .ToListAsync();
+
+            foreach (var employee in employees)
+            {
+                // Check if the employee already has a transaction for this month
+                var currentMonth = DateTime.UtcNow.Month;
+                var currentYear = DateTime.UtcNow.Year;
+
+                bool hasTransactionForThisMonth = await _context.EmployeeTransaction
+                    .AnyAsync(t => t.EmployeeId == employee.Id &&
+                                   t.TransactionDate.Month == currentMonth &&
+                                   t.TransactionDate.Year == currentYear &&
+                                   t.TransactionType == EmployeeTransactionType.Salary);
+
+                if (hasTransactionForThisMonth)
+                    continue;
+
+                // Check if the employee is new and calculate prorated salary if necessary
+                decimal salaryToPay = employee.Salary;
+                if (employee.HireDate.Month == currentMonth && employee.HireDate.Year == currentYear)
+                {
+                    int daysWorked = (DateTime.UtcNow - employee.HireDate).Days + 1;
+                    int totalDaysInMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+                    salaryToPay = (employee.Salary / totalDaysInMonth) * daysWorked;
+                }
+
+                EmployeeTransaction monthlySalaryTransaction = new()
+                {
+                    SalaryChange = salaryToPay,
+                    TransactionType = EmployeeTransactionType.Salary,
+                    Note = "Monthly salary payment",
+                    TransactionDate = DateTime.UtcNow,
+                    EmployeeId = employee.Id,
+                    Employee = employee
+                };
+
+                await _context.EmployeeTransaction.AddAsync(monthlySalaryTransaction);
+            }
+
+            await _context.SaveChangesAsync();
+        }
         #endregion
     }
 }

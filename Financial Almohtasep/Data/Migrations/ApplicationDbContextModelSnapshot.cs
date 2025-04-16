@@ -41,7 +41,7 @@ namespace Financial_Almohtasep.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clinets");
+                    b.ToTable("Clinets", (string)null);
                 });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.ClinetTransaction", b =>
@@ -73,7 +73,7 @@ namespace Financial_Almohtasep.Migrations
 
                     b.HasIndex("ClinetId");
 
-                    b.ToTable("ClinetsTransaction");
+                    b.ToTable("ClinetsTransaction", (string)null);
                 });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.Employee", b =>
@@ -105,7 +105,7 @@ namespace Financial_Almohtasep.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.EmployeeTransaction", b =>
@@ -136,7 +136,7 @@ namespace Financial_Almohtasep.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("EmployeeTransaction");
+                    b.ToTable("EmployeeTransaction", (string)null);
                 });
 
             modelBuilder.Entity("Financial_Almohtasep.Data.ClinetTransaction", b =>

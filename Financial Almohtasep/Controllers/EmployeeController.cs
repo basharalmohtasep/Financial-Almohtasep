@@ -1,9 +1,6 @@
 ﻿using Financial_Almohtasep.Helper;
 using Financial_Almohtasep.Models.Dto.Employees;
-using Financial_Almohtasep.Models.Dto.Employees;
-using Financial_Almohtasep.Models.Dto.Employees;
 using Financial_Almohtasep.Services.EmployeeServices;
-using Financial_Almohtasep.Services.EmployeeServices.TransactionServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Financial_Almohtasep.Controllers
@@ -13,8 +10,6 @@ namespace Financial_Almohtasep.Controllers
     {
         private readonly IEmployeeService _employeeService = employeeService;
 
-
-        #region Methods
         public async Task<IActionResult> Index()
         {
             List<EmployeeDto> Data = await _employeeService.GetAll();
@@ -97,7 +92,6 @@ namespace Financial_Almohtasep.Controllers
             NotificationHelper.Alert(TempData, true, "تم الحذف بنجاح");
             return RedirectToAction("Index");
         }
-        #endregion
     }
 }
 

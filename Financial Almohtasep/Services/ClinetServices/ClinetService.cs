@@ -12,7 +12,7 @@ namespace Financial_Almohtasep.Services.ClinetServices
         public async Task<List<ClinetDto>> GetAll()
         {
             return await _context.Clinets.AsNoTracking()
-                .Include(x=>x.Transaction)
+                .Include(x => x.Transaction)
                 .Select(I => new ClinetDto(I)).ToListAsync();
         }
 

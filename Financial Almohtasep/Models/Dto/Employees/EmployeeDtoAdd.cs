@@ -1,5 +1,4 @@
-﻿using Financial_Almohtasep.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Financial_Almohtasep.Models.Dto.Employees
 {

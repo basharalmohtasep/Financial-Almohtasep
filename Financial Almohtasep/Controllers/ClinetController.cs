@@ -10,7 +10,6 @@ namespace Financial_Almohtasep.Controllers
     {
         private readonly IClinetService _ClinetService = ClinetService;
 
-        #region Methods
         public async Task<IActionResult> Index()
         {
             List<ClinetDto> Data = await _ClinetService.GetAll();
@@ -93,7 +92,6 @@ namespace Financial_Almohtasep.Controllers
             NotificationHelper.Alert(TempData, true, "تم الحذف بنجاح");
             return RedirectToAction("Index");
         }
-        #endregion
     }
 }
 

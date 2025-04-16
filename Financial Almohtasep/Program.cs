@@ -1,10 +1,11 @@
 global using Financial_Almohtasep.Models;
 using Financial_Almohtasep.Data;
+using Financial_Almohtasep.HostedServices;
+using Financial_Almohtasep.Services.ClinetServices;
+using Financial_Almohtasep.Services.ClinetServices.ClinetTransactionServices;
 using Financial_Almohtasep.Services.EmployeeServices;
 using Financial_Almohtasep.Services.EmployeeServices.TransactionServices;
-using Financial_Almohtasep.Services.ClinetServices;
 using Microsoft.EntityFrameworkCore;
-using Financial_Almohtasep.Services.ClinetServices.ClinetTransactionServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +17,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHostedService<SalaryHostedService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IEmployeeTransactionServices, EmployeeTransactionServices>();
-builder.Services.AddScoped<IClinetService, ClinetService>(); 
-builder.Services.AddScoped<IClinetTransactionService ,ClinetTransactionService > ();
+builder.Services.AddScoped<IClinetService, ClinetService>();
+builder.Services.AddScoped<IClinetTransactionService, ClinetTransactionService>();
 
 var app = builder.Build();
 

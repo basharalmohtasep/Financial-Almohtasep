@@ -1,7 +1,5 @@
-﻿using Financial_Almohtasep.Models.Dto.Clinets;
-using Financial_Almohtasep.Models.Dto.Employees;
+﻿using Financial_Almohtasep.Models.Dto.Employees;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
 
 namespace Financial_Almohtasep.Data
 {

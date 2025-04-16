@@ -1,13 +1,11 @@
 ﻿using Financial_Almohtasep.Data;
-using Financial_Almohtasep.Models.Dto.Clinets;
 using Financial_Almohtasep.Models.Dto.Clinets.ClinetTransactions;
-using Financial_Almohtasep.Models.Dto.Employees.Transaction;
 using Financial_Almohtasep.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financial_Almohtasep.Services.ClinetServices.ClinetTransactionServices
 {
-    public class ClinetTransactionService(ApplicationDbContext context):IClinetTransactionService
+    public class ClinetTransactionService(ApplicationDbContext context) : IClinetTransactionService
     {
         private readonly ApplicationDbContext _context = context;
 
@@ -39,7 +37,7 @@ namespace Financial_Almohtasep.Services.ClinetServices.ClinetTransactionServices
             if (Clinet is null)
                 return 0;
             ClinetTransaction newTransaction = new(model);
-            newTransaction.Amount= CalculateTransaction(model.TransactionType, model.Amount);
+            newTransaction.Amount = CalculateTransaction(model.TransactionType, model.Amount);
             await _context.ClinetsTransaction.AddAsync(newTransaction);
             return await _context.SaveChangesAsync();
         }
@@ -75,7 +73,7 @@ namespace Financial_Almohtasep.Services.ClinetServices.ClinetTransactionServices
         {
             return Type switch
             {
-                ClinetTransactionType.Credit=> +value,
+                ClinetTransactionType.Credit => +value,
                 ClinetTransactionType.Debit => -value,
                 _ => throw new InvalidOperationException("Invalid transaction type provided.")
             };
